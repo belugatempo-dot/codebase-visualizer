@@ -1,0 +1,24 @@
+{
+  "name": "codebase-visualizer",
+  "version": "1.0.0",
+  "description": "Transform any codebase into an interactive visual HTML guide that a 10-year-old can understand. Generates a single self-contained HTML file with animated architecture diagrams, clickable component explorer, story-mode narrative, data flow animations, and bilingual CN/EN support.",
+  "author": {
+    "name": "Amanda",
+    "email": "flyrhyme@gmail.com"
+  },
+  "repository": "https://github.com/belugatempo-dot/codebase-visualizer",
+  "homepage": "https://github.com/belugatempo-dot/codebase-visualizer",
+  "license": "MIT",
+  "keywords": [
+    "codebase",
+    "visualizer",
+    "architecture",
+    "diagram",
+    "interactive",
+    "guide",
+    "bilingual",
+    "html",
+    "documentation"
+  ],
+  "skills": "./skills/"
+}

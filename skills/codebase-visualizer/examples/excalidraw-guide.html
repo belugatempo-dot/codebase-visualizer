@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excalidraw - Interactive Codebase Guide</title>
+<style>
+  :root, [data-theme="dark"] {
+    --bg: #3d3b6e;
+    --bg-gradient: linear-gradient(170deg, #474582 0%, #3d3b6e 35%, #4a4880 65%, #3a385e 100%);
+    --card: #2a2850;
+    --accent: #00d4ff;
+    --accent2: #ff6b9d;
+    --accent3: #c39eff;
+    --accent4: #51cf66;
+    --text: #e8e8f0;
+    --text-dim: #9999bb;
+    --border: #4a4888;
+    --glow: rgba(0, 212, 255, 0.15);
+    --nav-bg: rgba(50, 48, 90, 0.95);
+    --node-fill: #2a2850;
+    --node-label: #ffffff;
+    --node-sublabel: #8888aa;
+    --panel-shadow: rgba(0, 0, 0, 0.4);
+    --conn-bg: rgba(255, 255, 255, 0.03);
+  }
+  [data-theme="light"] {
+    --bg: #f5f5fa;
+    --bg-gradient: none;
+    --card: #ffffff;
+    --accent: #0099cc;
+    --accent2: #e0457b;
+    --accent3: #8b5cf6;
+    --accent4: #16a34a;
+    --text: #1a1a2e;
+    --text-dim: #64748b;
+    --border: #e2e8f0;
+    --glow: rgba(0, 153, 204, 0.08);
+    --nav-bg: rgba(245, 245, 250, 0.95);
+    --node-fill: #ffffff;
+    --node-label: #1a1a2e;
+    --node-sublabel: #64748b;
+    --panel-shadow: rgba(0, 0, 0, 0.1);
+    --conn-bg: rgba(0, 0, 0, 0.03);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    background-image: var(--bg-gradient);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 60px;
+  }
+  nav .logo {
+    font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  nav .tabs { display: flex; gap: 0.5rem; }
+  nav .tabs button {
+    background: none; border: none; color: var(--text-dim);
+    padding: 0.5rem 1rem; cursor: pointer; border-radius: 8px;
+    font-size: 0.9rem; transition: all 0.3s;
+  }
+  nav .tabs button:hover { color: var(--text); background: var(--border); }
+  nav .tabs button.active {
+    color: var(--accent); background: var(--glow);
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+  }
+  nav .nav-controls { display: flex; gap: 0.5rem; align-items: center; }
+  nav .lang-toggle, nav .theme-toggle {
+    background: var(--border); border: 1px solid var(--border);
+    color: var(--text); padding: 0.4rem 0.8rem; border-radius: 6px;
+    cursor: pointer; font-size: 0.85rem; transition: all 0.3s;
+  }
+  nav .lang-toggle:hover, nav .theme-toggle:hover {
+    border-color: var(--accent); color: var(--accent);
+  }
+  main { margin-top: 60px; padding: 2rem; max-width: 1400px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+  section { display: none; animation: fadeIn 0.4s ease; }
+  section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .hero {
+    text-align: center; padding: 3rem 1rem;
+    background: radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%);
+    border-radius: 20px; margin-bottom: 2rem;
+  }
+  .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+  .hero .subtitle { color: var(--text-dim); font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto; }
+  .hero .mascot { font-size: 4rem; margin-bottom: 1rem; }
+  .story-timeline { position: relative; padding-left: 3rem; }
+  .story-timeline::before {
+    content: ''; position: absolute; left: 1rem; top: 0; bottom: 0;
+    width: 3px; background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+    border-radius: 3px;
+  }
+  .story-step {
+    position: relative; margin-bottom: 2rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem 2rem;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .story-step:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+    transform: translateX(5px);
+  }
+  .story-step::before {
+    content: attr(data-icon); position: absolute; left: -2.5rem; top: 1.5rem;
+    font-size: 1.5rem; width: 2rem; text-align: center;
+  }
+  .story-step .step-num {
+    display: inline-block; background: var(--glow); color: var(--accent);
+    padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
+    font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .story-step h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
+  .story-step p { color: var(--text-dim); line-height: 1.7; font-size: 0.95rem; }
+  .story-step .detail {
+    display: none; margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px solid var(--border); color: var(--text); line-height: 1.8;
+  }
+  .story-step.expanded .detail { display: block; animation: fadeIn 0.3s; }
+  .arch-container { display: flex; flex-direction: column; gap: 2rem; }
+  .arch-diagram {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 2rem; min-height: 400px;
+    position: relative; overflow: hidden;
+  }
+  .arch-diagram svg { width: 100%; height: auto; }
+  .arch-legend {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+    padding: 1rem; background: var(--card); border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  .arch-legend .legend-item {
+    display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-dim);
+  }
+  .arch-legend .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .node-group { cursor: pointer; transition: transform 0.2s; }
+  .node-group:hover { transform: scale(1.05); }
+  .node-group:hover rect { filter: brightness(1.3); }
+  .node-rect { rx: 12; ry: 12; stroke-width: 2; transition: all 0.3s; }
+  .node-label { fill: var(--node-label); font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .node-sublabel { fill: var(--node-sublabel); font-size: 10px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .flow-path { fill: none; stroke-width: 2; stroke-dasharray: 8 4; animation: flowDash 1.5s linear infinite; }
+  @keyframes flowDash { to { stroke-dashoffset: -24; } }
+  .flow-label { font-size: 10px; fill: var(--text-dim); text-anchor: middle; dominant-baseline: central; }
+  .detail-panel {
+    position: fixed; right: -450px; top: 60px; bottom: 0; width: 420px;
+    background: var(--card); border-left: 1px solid var(--border);
+    z-index: 99; transition: right 0.3s ease; overflow-y: auto; padding: 2rem;
+  }
+  .detail-panel.open { right: 0; box-shadow: -10px 0 40px var(--panel-shadow); }
+  .detail-panel .close-btn {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: none; color: var(--text-dim);
+    font-size: 1.5rem; cursor: pointer;
+  }
+  .detail-panel h2 { margin-bottom: 0.5rem; color: var(--accent); }
+  .detail-panel .tag {
+    display: inline-block; background: var(--glow); color: var(--accent);
+    padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
+    margin-right: 0.3rem; margin-bottom: 0.3rem;
+  }
+  .detail-panel .desc { color: var(--text-dim); line-height: 1.8; margin: 1rem 0; }
+  .detail-panel .connections { margin-top: 1rem; }
+  .detail-panel .connections h4 { color: var(--accent3); margin-bottom: 0.5rem; }
+  .detail-panel .conn-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem; border-radius: 8px; margin-bottom: 0.3rem;
+    background: var(--conn-bg);
+  }
+  .detail-panel .conn-arrow { color: var(--accent2); }
+  .howto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .howto-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem; transition: all 0.3s;
+  }
+  .howto-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
+  .howto-card .card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+  .howto-card h3 { margin-bottom: 0.5rem; }
+  .howto-card p { color: var(--text-dim); line-height: 1.7; font-size: 0.9rem; }
+  .howto-card .steps { margin-top: 1rem; padding-left: 1.2rem; list-style: none; counter-reset: step; }
+  .howto-card .steps li {
+    counter-increment: step; position: relative;
+    padding: 0.3rem 0; color: var(--text-dim); font-size: 0.9rem;
+  }
+  .howto-card .steps li::before {
+    content: counter(step); position: absolute; left: -1.5rem;
+    color: var(--accent); font-weight: 700; font-size: 0.8rem;
+  }
+  .flow-particle { r: 4; opacity: 0.8; animation: pulse 1.5s ease-in-out infinite alternate; }
+  @keyframes pulse { from { r: 3; opacity: 0.6; } to { r: 5; opacity: 1; } }
+  /* === STARRY NIGHT BACKGROUND (dark mode only) === */
+  .starry-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none; overflow: hidden;
+  }
+  .starry-bg .star {
+    position: absolute; width: 2px; height: 2px;
+    background: #ffd43b; border-radius: 50%;
+    animation: twinkle var(--duration, 3s) ease-in-out infinite alternate;
+  }
+  .starry-bg .star.dim {
+    background: rgba(255, 255, 255, 0.5); width: 1px; height: 1px;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.2; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1.2); }
+  }
+  .starry-bg .nebula {
+    position: absolute; border-radius: 50%;
+    filter: blur(80px); opacity: 0.15;
+  }
+  [data-theme="light"] .starry-bg { display: none; }
+  [data-theme="light"] body { background-image: none; }
+  [data-theme="light"] .node-rect { fill: var(--node-fill); }
+  [data-theme="light"] .arch-diagram { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
+  [data-theme="light"] .story-step:hover { box-shadow: 0 4px 20px rgba(0, 153, 204, 0.1); }
+  [data-theme="light"] .howto-card:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
+  [data-theme="light"] .tooltip { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12); }
+  body, nav, .story-step, .arch-diagram, .howto-card, .detail-panel,
+  .search-bar, .arch-legend, .tooltip {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  /* === RESPONSIVE ===  */
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    nav .tabs button { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+    main { padding: 1rem; }
+    .hero h1 { font-size: 1.8rem; }
+    .detail-panel { width: 100%; right: -100%; }
+  }
+  .tooltip {
+    position: fixed; background: var(--card); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.85rem;
+    pointer-events: none; z-index: 200; opacity: 0; transition: opacity 0.2s;
+    max-width: 250px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .tooltip.visible { opacity: 1; }
+  .search-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 0.6rem 1rem; margin-bottom: 1.5rem;
+  }
+  .search-bar input {
+    flex: 1; background: none; border: none; color: var(--text);
+    font-size: 0.95rem; outline: none;
+  }
+  .search-bar input::placeholder { color: var(--text-dim); }
+</style>
+</head>
+<body>
+<div class="starry-bg" id="starry-bg"></div>
+
+<nav>
+  <div class="logo">Excalidraw Introduction</div>
+  <div class="tabs">
+    <button class="active" data-tab="story" onclick="switchTab('story')">
+      <span data-en="Story Mode" data-zh="故事模式">Story Mode</span>
+    </button>
+    <button data-tab="architecture" onclick="switchTab('architecture')">
+      <span data-en="Architecture" data-zh="技术架构">Architecture</span>
+    </button>
+    <button data-tab="howto" onclick="switchTab('howto')">
+      <span data-en="How to Use" data-zh="使用指南">How to Use</span>
+    </button>
+    <button data-tab="dataflow" onclick="switchTab('dataflow')">
+      <span data-en="Data Flow" data-zh="数据流">Data Flow</span>
+    </button>
+  </div>
+  <div class="nav-controls">
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">☀️</button>
+    <button class="lang-toggle" onclick="toggleLang()">EN / 中文</button>
+  </div>
+</nav>
+
+<main>
+  <section id="tab-story" class="active">
+    <div class="hero">
+      <div class="mascot">🎭</div>
+      <h1><span data-en="Meet Excali the Drawing Wizard!" data-zh="来认识画画魔法师 Excali!">Meet Excali the Drawing Wizard!</span></h1>
+      <p class="subtitle"><span data-en="Hi! I'm Excali! I'm a magic whiteboard that lets you and your friends draw together from anywhere in the world. Everything I draw looks hand-drawn and fun!" data-zh="嗨！我是 Excali！我是一块神奇的白板，让你和朋友们不管在哪儿都能一起画画。我画出来的所有东西都像手绘涂鸦一样有趣！">Hi! I'm Excali! I'm a magic whiteboard that lets you and your friends draw together from anywhere in the world. Everything I draw looks hand-drawn and fun!</span></p>
+    </div>
+    <div class="story-timeline" id="story-timeline">
+      <div class="story-step" data-icon="🎭">
+        <span class="step-num"><span data-en="ACT 1 — WHAT AM I?" data-zh="第一幕 — 我是谁？">ACT 1 — WHAT AM I?</span></span>
+        <h3><span data-en="I'm a Magic Drawing Board!" data-zh="我是一块魔法画板！">I'm a Magic Drawing Board!</span></h3>
+        <p><span data-en="Imagine an infinite piece of paper that never runs out of space. You can draw rectangles, circles, arrows — and everything looks like pencil doodles!" data-zh="想象一张永远用不完的纸。你可以画方块、圆圈、箭头——而且画出来的一切都像铅笔涂鸦！">Imagine an infinite piece of paper that never runs out of space. You can draw rectangles, circles, arrows — and everything looks like pencil doodles!</span></p>
+        <div class="detail"><span data-en="Excalidraw is open-source and used by millions. It runs in your browser — no install needed. The hand-drawn look comes from 'roughjs' which adds tiny wobbles to every line. Each shape has a secret 'seed' number that makes the wobbles consistent!" data-zh="Excalidraw 是开源的，全球有数百万人使用。它在浏览器里运行——不用安装。手绘效果来自 'roughjs' 库，它给每条线加上微小的抖动。每个图形有一个秘密'种子'数字让抖动保持一致！">Excalidraw is open-source and used by millions. It runs in your browser — no install needed. The hand-drawn look comes from 'roughjs' which adds tiny wobbles to every line. Each shape has a secret 'seed' number that makes the wobbles consistent!</span></div>
+      </div>
+      <div class="story-step" data-icon="🎨">
+        <span class="step-num"><span data-en="ACT 2 — THE TEAM" data-zh="第二幕 — 认识团队">ACT 2 — THE TEAM</span></span>
+        <h3><span data-en="The Magic Whiteboard (3 Glass Layers)" data-zh="魔法白板（三层玻璃）">The Magic Whiteboard (3 Glass Layers)</span></h3>
+        <p><span data-en="3 pieces of glass stacked together! Bottom = finished drawings. Middle = selection boxes + friend cursors. Top = what you're drawing RIGHT NOW." data-zh="三块玻璃叠在一起！底层 = 画好的图形。中层 = 选择框 + 朋友的光标。顶层 = 你正在画的东西。">3 pieces of glass stacked together! Bottom = finished drawings. Middle = selection boxes + friend cursors. Top = what you're drawing RIGHT NOW.</span></p>
+        <div class="detail"><span data-en="StaticCanvas (bottom) only redraws when shapes change. InteractiveCanvas (middle) shows selection and cursors. NewElementCanvas (top) shows live drawing. This trick means only the tiny top layer redraws while you drag — super smooth!" data-zh="StaticCanvas（底层）只在形状变化时重绘。InteractiveCanvas（中层）展示选择框和光标。NewElementCanvas（顶层）展示实时绘制。这个技巧意味着你拖动时只有顶层需要重绘——超级流畅！">StaticCanvas (bottom) only redraws when shapes change. InteractiveCanvas (middle) shows selection and cursors. NewElementCanvas (top) shows live drawing. This trick means only the tiny top layer redraws while you drag — super smooth!</span></div>
+      </div>
+      <div class="story-step" data-icon="🔷">
+        <span class="step-num"><span data-en="ACT 2 — THE TEAM" data-zh="第二幕 — 认识团队">ACT 2 — THE TEAM</span></span>
+        <h3><span data-en="The Shape Factory (Elements)" data-zh="形状工厂（元素系统）">The Shape Factory (Elements)</span></h3>
+        <p><span data-en="Every shape is a note card with an ID, position, size, color, and a magic 'seed' number for the hand-drawn look." data-zh="每个图形都是一张卡片，上面有 ID、位置、大小、颜色和一个制造手绘效果的'种子'数字。">Every shape is a note card with an ID, position, size, color, and a magic 'seed' number for the hand-drawn look.</span></p>
+        <div class="detail"><span data-en="The factory makes rectangles, diamonds, ellipses, arrows, freehand lines, text, and images! Only ONE function (mutateElement) can modify shapes — this prevents bugs from different code parts fighting over the same shape." data-zh="工厂能造方块、菱形、椭圆、箭头、手绘线条、文字和图片！只有一个函数（mutateElement）能修改形状——这防止了代码不同部分抢着修改同一个形状。">The factory makes rectangles, diamonds, ellipses, arrows, freehand lines, text, and images! Only ONE function (mutateElement) can modify shapes — this prevents bugs from different code parts fighting over the same shape.</span></div>
+      </div>
+      <div class="story-step" data-icon="🖱️">
+        <span class="step-num"><span data-en="ACT 3 — DRAW!" data-zh="第三幕 — 画画！">ACT 3 — DRAW!</span></span>
+        <h3><span data-en="Drawing a Rectangle Step by Step" data-zh="一步步画一个方块">Drawing a Rectangle Step by Step</span></h3>
+        <p><span data-en="Click rectangle tool → press mouse → drag → release. Let's see what happens behind the scenes!" data-zh="点击方块工具 → 按下鼠标 → 拖动 → 松开。看看幕后发生了什么！">Click rectangle tool → press mouse → drag → release. Let's see what happens behind the scenes!</span></p>
+        <div class="detail"><span data-en="1) Click tool → Command Center sets activeTool. 2) Mouse down → new shape card created, put in Filing Cabinet. 3) Drag → shape width/height update every frame. 4) Top glass redraws instantly. 5) Release → shape stamped 'done', moves to bottom glass. 6) Time Machine records the action for undo!" data-zh="1）点击工具 → 指挥中心设置当前工具。2）按下鼠标 → 创建新形状卡片，放入文件柜。3）拖动 → 每帧更新宽高。4）顶层玻璃即时重绘。5）松开 → 形状盖上'完成'章，移到底层。6）时光机记录操作以便撤销！">1) Click tool → Command Center sets activeTool. 2) Mouse down → new shape card created, put in Filing Cabinet. 3) Drag → shape width/height update every frame. 4) Top glass redraws instantly. 5) Release → shape stamped 'done', moves to bottom glass. 6) Time Machine records the action for undo!</span></div>
+      </div>
+      <div class="story-step" data-icon="📡">
+        <span class="step-num"><span data-en="ACT 4 — FRIENDS" data-zh="第四幕 — 朋友们">ACT 4 — FRIENDS</span></span>
+        <h3><span data-en="Drawing with Friends (Encrypted!)" data-zh="和朋友一起画（加密的！）">Drawing with Friends (Encrypted!)</span></h3>
+        <p><span data-en="Share a link → connect through a secret Walkie-Talkie → everything scrambled with military-grade codes!" data-zh="分享链接 → 通过秘密对讲机连接 → 所有内容用军事级别的暗号加密！">Share a link → connect through a secret Walkie-Talkie → everything scrambled with military-grade codes!</span></p>
+        <div class="detail"><span data-en="Socket.IO connects you in real-time. The encryption key hides in the URL after #, so the server never sees it! When two people edit the same shape, a referee checks version numbers to pick the winner. You can see your friend's cursor moving live!" data-zh="Socket.IO 实时连接你们。加密密钥藏在 URL 的 # 后面，服务器看不到！两人同时编辑同一形状时，裁判检查版本号决定谁的生效。你能实时看到朋友的光标！">Socket.IO connects you in real-time. The encryption key hides in the URL after #, so the server never sees it! When two people edit the same shape, a referee checks version numbers to pick the winner. You can see your friend's cursor moving live!</span></div>
+      </div>
+      <div class="story-step" data-icon="⏪">
+        <span class="step-num"><span data-en="ACT 5 — SUPERPOWERS" data-zh="第五幕 — 超能力">ACT 5 — SUPERPOWERS</span></span>
+        <h3><span data-en="The Time Machine (Undo Magic)" data-zh="时光机（撤销魔法）">The Time Machine (Undo Magic)</span></h3>
+        <p><span data-en="Press Ctrl+Z to go back in time! Instead of saving photos of the whole board, it just records tiny differences." data-zh="按 Ctrl+Z 回到过去！它不保存整个画板的照片，只记录微小的差异。">Press Ctrl+Z to go back in time! Instead of saving photos of the whole board, it just records tiny differences.</span></p>
+        <div class="detail"><span data-en="The delta system records 'moved shape #5 from A to B'. To undo, apply the opposite: 'move shape #5 from B back to A'. Super memory-efficient! It also ignores friend's changes — those have their own undo stacks." data-zh="差异系统记录'把形状 #5 从 A 移到 B'。撤销就执行相反操作：'把形状 #5 从 B 移回 A'。超级省内存！它还忽略朋友的改动——那些有自己的撤销栈。">The delta system records 'moved shape #5 from A to B'. To undo, apply the opposite: 'move shape #5 from B back to A'. Super memory-efficient! It also ignores friend's changes — those have their own undo stacks.</span></div>
+      </div>
+      <div class="story-step" data-icon="💾">
+        <span class="step-num"><span data-en="ACT 5 — SUPERPOWERS" data-zh="第五幕 — 超能力">ACT 5 — SUPERPOWERS</span></span>
+        <h3><span data-en="The Treasure Chest (Auto-Save)" data-zh="百宝箱（自动保存）">The Treasure Chest (Auto-Save)</span></h3>
+        <p><span data-en="Your drawings save in TWO places: your browser AND the cloud. Even if the internet dies, your work is safe!" data-zh="你的画保存在两个地方：浏览器和云端。就算断网了，作品也是安全的！">Your drawings save in TWO places: your browser AND the cloud. Even if the internet dies, your work is safe!</span></p>
+        <div class="detail"><span data-en="IndexedDB saves locally every few seconds. Firebase Firestore saves to the cloud. Firebase Storage handles big images. There's even tab sync — open the same drawing in two tabs and they stay in sync via BroadcastChannel!" data-zh="IndexedDB 每隔几秒本地保存。Firebase Firestore 保存到云端。Firebase Storage 处理大图片。还有标签页同步——在两个标签页打开同一幅画，通过 BroadcastChannel 自动同步！">IndexedDB saves locally every few seconds. Firebase Firestore saves to the cloud. Firebase Storage handles big images. There's even tab sync — open the same drawing in two tabs and they stay in sync via BroadcastChannel!</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-architecture">
+    <h2 style="margin-bottom:1.5rem"><span data-en="System Architecture" data-zh="系统架构">System Architecture</span></h2>
+    <div class="search-bar">
+      <span>🔍</span>
+      <input type="text" id="arch-search" placeholder="Search components..." data-en-placeholder="Search components..." data-zh-placeholder="搜索组件..." oninput="filterComponents(this.value)">
+    </div>
+    <div class="arch-container">
+      <div class="arch-diagram" id="arch-svg-container">
+        <svg viewBox="0 0 920 540" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8888aa"/></marker></defs>
+          <g class="node-group" data-id="canvas-system" data-name="Canvas System Magic Whiteboard">
+            <rect class="node-rect" x="30" y="30" width="200" height="80" fill="var(--node-fill)" stroke="#00d4ff"/>
+            <text class="node-label" x="130" y="60">🎨 Magic Whiteboard</text>
+            <text class="node-sublabel" x="130" y="80">3 stacked canvases</text>
+          </g>
+          <g class="node-group" data-id="action-manager" data-name="Action Manager Command Center">
+            <rect class="node-rect" x="540" y="30" width="200" height="80" fill="var(--node-fill)" stroke="#ff6b9d"/>
+            <text class="node-label" x="640" y="60">🎮 Command Center</text>
+            <text class="node-sublabel" x="640" y="80">ActionManager</text>
+          </g>
+          <g class="node-group" data-id="element-system" data-name="Element System Shape Factory">
+            <rect class="node-rect" x="30" y="220" width="200" height="80" fill="var(--node-fill)" stroke="#00d4ff"/>
+            <text class="node-label" x="130" y="250">🔷 Shape Factory</text>
+            <text class="node-sublabel" x="130" y="270">Elements + roughjs</text>
+          </g>
+          <g class="node-group" data-id="scene" data-name="Scene Filing Cabinet">
+            <rect class="node-rect" x="360" y="220" width="200" height="80" fill="var(--node-fill)" stroke="#ff6b9d"/>
+            <text class="node-label" x="460" y="250">🗄️ Filing Cabinet</text>
+            <text class="node-sublabel" x="460" y="270">Scene (data model)</text>
+          </g>
+          <g class="node-group" data-id="history-store" data-name="History Store Time Machine">
+            <rect class="node-rect" x="690" y="220" width="200" height="80" fill="var(--node-fill)" stroke="#c39eff"/>
+            <text class="node-label" x="790" y="250">⏪ Time Machine</text>
+            <text class="node-sublabel" x="790" y="270">History + Store deltas</text>
+          </g>
+          <g class="node-group" data-id="collab" data-name="Collaboration Walkie-Talkie">
+            <rect class="node-rect" x="360" y="410" width="200" height="80" fill="var(--node-fill)" stroke="#ffd43b"/>
+            <text class="node-label" x="460" y="440">📡 Walkie-Talkie</text>
+            <text class="node-sublabel" x="460" y="460">Socket.IO + encryption</text>
+          </g>
+          <g class="node-group" data-id="storage" data-name="Storage Treasure Chest">
+            <rect class="node-rect" x="690" y="410" width="200" height="80" fill="var(--node-fill)" stroke="#51cf66"/>
+            <text class="node-label" x="790" y="440">💾 Treasure Chest</text>
+            <text class="node-sublabel" x="790" y="460">Firebase + IndexedDB</text>
+          </g>
+          <path id="f1" class="flow-path" stroke="#00d4ff" d="M 130,110 L 130,220" marker-end="url(#ah)"/>
+          <path id="f2" class="flow-path" stroke="#00d4ff" d="M 230,70 C 310,70 310,260 360,260" marker-end="url(#ah)"/>
+          <path id="f3" class="flow-path" stroke="#ff6b9d" d="M 600,110 C 550,160 500,190 480,220" marker-end="url(#ah)"/>
+          <path id="f4" class="flow-path" stroke="#ff6b9d" d="M 540,60 C 400,45 310,45 230,60" marker-end="url(#ah)"/>
+          <path id="f5" class="flow-path" stroke="#c39eff" d="M 560,260 L 690,260" marker-end="url(#ah)"/>
+          <path id="f6" class="flow-path" stroke="#ffd43b" d="M 460,300 L 460,410" marker-end="url(#ah)"/>
+          <path id="f7" class="flow-path" stroke="#51cf66" d="M 560,450 L 690,450" marker-end="url(#ah)"/>
+          <path id="f8" class="flow-path" stroke="#00d4ff" d="M 230,260 L 360,260" marker-end="url(#ah)"/>
+          <path id="f9" class="flow-path" stroke="#51cf66" d="M 790,410 C 790,350 560,310 520,300" marker-end="url(#ah)"/>
+        </svg>
+      </div>
+      <div class="arch-legend" id="arch-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#00d4ff"></div><span data-en="Frontend (Canvas & Elements)" data-zh="前端（画布 & 元素）">Frontend (Canvas & Elements)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff6b9d"></div><span data-en="Core Logic (Scene & Actions)" data-zh="核心逻辑（场景 & 操作）">Core Logic (Scene & Actions)</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c39eff"></div><span data-en="History / Undo System" data-zh="历史/撤销系统">History / Undo System</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffd43b"></div><span data-en="Real-time Collaboration" data-zh="实时协作">Real-time Collaboration</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:#51cf66"></div><span data-en="Storage (Cloud & Local)" data-zh="存储（云端 & 本地）">Storage (Cloud & Local)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-howto">
+    <h2 style="margin-bottom:1.5rem"><span data-en="How to Use Excalidraw" data-zh="如何使用 Excalidraw">How to Use Excalidraw</span></h2>
+    <div class="howto-grid" id="howto-grid">
+      <div class="howto-card">
+        <div class="card-icon">🚀</div>
+        <h3><span data-en="Getting Started" data-zh="快速开始">Getting Started</span></h3>
+        <p><span data-en="Start drawing in seconds — no account needed!" data-zh="几秒钟就能开始——不需要账号！">Start drawing in seconds — no account needed!</span></p>
+        <ol class="steps">
+          <li><span data-en="Visit excalidraw.com" data-zh="打开 excalidraw.com">Visit excalidraw.com</span></li>
+          <li><span data-en="Pick a shape from the toolbar" data-zh="从工具栏选一个形状">Pick a shape from the toolbar</span></li>
+          <li><span data-en="Click and drag to draw" data-zh="点击拖动来画画">Click and drag to draw</span></li>
+          <li><span data-en="Customize colors on the left panel" data-zh="在左侧面板调整颜色">Customize colors on the left panel</span></li>
+        </ol>
+      </div>
+      <div class="howto-card">
+        <div class="card-icon">🎨</div>
+        <h3><span data-en="Drawing Shapes" data-zh="画图形">Drawing Shapes</span></h3>
+        <p><span data-en="Keyboard shortcuts make drawing fast!" data-zh="快捷键让画画更快！">Keyboard shortcuts make drawing fast!</span></p>
+        <ol class="steps">
+          <li><span data-en="R = rectangle, O = ellipse, A = arrow" data-zh="R = 方块，O = 椭圆，A = 箭头">R = rectangle, O = ellipse, A = arrow</span></li>
+          <li><span data-en="D = freehand pencil drawing" data-zh="D = 自由手绘">D = freehand pencil drawing</span></li>
+          <li><span data-en="Double-click shapes to type inside" data-zh="双击图形可以在里面打字">Double-click shapes to type inside</span></li>
+          <li><span data-en="Ctrl+D to duplicate selected shapes" data-zh="Ctrl+D 复制选中的图形">Ctrl+D to duplicate selected shapes</span></li>
+        </ol>
+      </div>
+      <div class="howto-card">
+        <div class="card-icon">👥</div>
+        <h3><span data-en="Draw with Friends" data-zh="和朋友一起画">Draw with Friends</span></h3>
+        <p><span data-en="Real-time with end-to-end encryption." data-zh="端到端加密的实时协作。">Real-time with end-to-end encryption.</span></p>
+        <ol class="steps">
+          <li><span data-en="Click 'Live collaboration' button" data-zh="点击'实时协作'按钮">Click 'Live collaboration' button</span></li>
+          <li><span data-en="Share the link with friends" data-zh="把链接分享给朋友">Share the link with friends</span></li>
+          <li><span data-en="See each other's cursors in real-time" data-zh="实时看到彼此的光标">See each other's cursors in real-time</span></li>
+          <li><span data-en="Only link holders can see the drawing" data-zh="只有有链接的人才能看到">Only link holders can see the drawing</span></li>
+        </ol>
+      </div>
+      <div class="howto-card">
+        <div class="card-icon">💾</div>
+        <h3><span data-en="Save & Export" data-zh="保存和导出">Save & Export</span></h3>
+        <p><span data-en="Auto-saves locally. Export anytime." data-zh="自动本地保存。随时导出。">Auto-saves locally. Export anytime.</span></p>
+        <ol class="steps">
+          <li><span data-en="Auto-saves to browser every few seconds" data-zh="每隔几秒自动保存到浏览器">Auto-saves to browser every few seconds</span></li>
+          <li><span data-en="Menu → Export as PNG or SVG" data-zh="菜单 → 导出为 PNG 或 SVG">Menu → Export as PNG or SVG</span></li>
+          <li><span data-en="Save as .excalidraw file to disk" data-zh="保存为 .excalidraw 文件到磁盘">Save as .excalidraw file to disk</span></li>
+          <li><span data-en="Drag file onto canvas to restore" data-zh="把文件拖到画布上即可恢复">Drag file onto canvas to restore</span></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-dataflow">
+    <h2 style="margin-bottom:1.5rem"><span data-en="Data Flow: Drawing a Rectangle" data-zh="数据流：画一个方块的全过程">Data Flow: Drawing a Rectangle</span></h2>
+    <div class="arch-diagram" id="dataflow-svg-container">
+      <svg viewBox="0 0 960 580" xmlns="http://www.w3.org/2000/svg">
+        <defs><marker id="da" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8888aa"/></marker></defs>
+        <text x="480" y="25" fill="#00d4ff" font-size="14" font-weight="bold" text-anchor="middle" data-en="Main Drawing Flow" data-zh="主绘制流程">Main Drawing Flow</text>
+        <circle cx="60" cy="80" r="28" fill="#2a2850" stroke="#e0e0e0" stroke-width="2"/>
+        <text x="60" y="77" fill="white" font-size="18" text-anchor="middle">👆</text>
+        <text x="60" y="95" fill="#8888aa" font-size="8" text-anchor="middle" data-en="User" data-zh="用户">User</text>
+        <rect x="130" y="52" width="120" height="56" rx="10" fill="#2a2850" stroke="#00d4ff" stroke-width="2"/>
+        <text x="190" y="75" fill="white" font-size="10" font-weight="600" text-anchor="middle">InteractiveCanvas</text>
+        <text x="190" y="90" fill="#8888aa" font-size="8" text-anchor="middle" data-en="captures pointer" data-zh="捕获指针事件">captures pointer</text>
+        <rect x="290" y="52" width="110" height="56" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="345" y="75" fill="white" font-size="10" font-weight="600" text-anchor="middle">App.tsx</text>
+        <text x="345" y="90" fill="#8888aa" font-size="8" text-anchor="middle" data-en="handles event" data-zh="处理事件">handles event</text>
+        <rect x="440" y="52" width="110" height="56" rx="10" fill="#2a2850" stroke="#00d4ff" stroke-width="2"/>
+        <text x="495" y="75" fill="white" font-size="10" font-weight="600" text-anchor="middle">newElement()</text>
+        <text x="495" y="90" fill="#8888aa" font-size="8" text-anchor="middle" data-en="creates card" data-zh="创建元素">creates card</text>
+        <rect x="590" y="52" width="110" height="56" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="645" y="75" fill="white" font-size="10" font-weight="600" text-anchor="middle">🗄️ Scene</text>
+        <text x="645" y="90" fill="#8888aa" font-size="8" text-anchor="middle" data-en="stores element" data-zh="存储元素">stores element</text>
+        <rect x="740" y="52" width="120" height="56" rx="10" fill="#2a2850" stroke="#c39eff" stroke-width="2"/>
+        <text x="800" y="75" fill="white" font-size="10" font-weight="600" text-anchor="middle">mutateElement()</text>
+        <text x="800" y="90" fill="#8888aa" font-size="8" text-anchor="middle" data-en="updates on drag" data-zh="拖拽时更新">updates on drag</text>
+        <path id="d1" class="flow-path" stroke="#e0e0e0" d="M 88,80 L 130,80" marker-end="url(#da)"/>
+        <path id="d2" class="flow-path" stroke="#00d4ff" d="M 250,80 L 290,80" marker-end="url(#da)"/>
+        <path id="d3" class="flow-path" stroke="#ff6b9d" d="M 400,80 L 440,80" marker-end="url(#da)"/>
+        <path id="d4" class="flow-path" stroke="#00d4ff" d="M 550,80 L 590,80" marker-end="url(#da)"/>
+        <path id="d5" class="flow-path" stroke="#ff6b9d" d="M 700,80 L 740,80" marker-end="url(#da)"/>
+
+        <text x="480" y="160" fill="#ff6b9d" font-size="14" font-weight="bold" text-anchor="middle" data-en="Rendering Pipeline" data-zh="渲染管道">Rendering Pipeline</text>
+        <rect x="80" y="180" width="130" height="56" rx="10" fill="#2a2850" stroke="#c39eff" stroke-width="2"/>
+        <text x="145" y="203" fill="white" font-size="10" font-weight="600" text-anchor="middle">ShapeCache</text>
+        <text x="145" y="218" fill="#8888aa" font-size="8" text-anchor="middle" data-en="caches roughjs" data-zh="缓存手绘路径">caches roughjs</text>
+        <rect x="260" y="180" width="130" height="56" rx="10" fill="#2a2850" stroke="#00d4ff" stroke-width="2"/>
+        <text x="325" y="203" fill="white" font-size="10" font-weight="600" text-anchor="middle">roughjs Generator</text>
+        <text x="325" y="218" fill="#8888aa" font-size="8" text-anchor="middle" data-en="hand-drawn style" data-zh="手绘风格">hand-drawn style</text>
+        <rect x="440" y="180" width="130" height="56" rx="10" fill="#2a2850" stroke="#00d4ff" stroke-width="2"/>
+        <text x="505" y="203" fill="white" font-size="10" font-weight="600" text-anchor="middle">renderElement()</text>
+        <text x="505" y="218" fill="#8888aa" font-size="8" text-anchor="middle" data-en="draws on canvas" data-zh="绘制到画布">draws on canvas</text>
+        <rect x="620" y="180" width="150" height="56" rx="10" fill="#2a2850" stroke="#00d4ff" stroke-width="2"/>
+        <text x="695" y="203" fill="white" font-size="10" font-weight="600" text-anchor="middle">🖼️ StaticCanvas</text>
+        <text x="695" y="218" fill="#8888aa" font-size="8" text-anchor="middle" data-en="pixels on screen!" data-zh="像素显示在屏幕！">pixels on screen!</text>
+        <path id="d6" class="flow-path" stroke="#c39eff" d="M 800,108 C 800,145 220,145 145,180" marker-end="url(#da)"/>
+        <path id="d7" class="flow-path" stroke="#c39eff" d="M 210,208 L 260,208" marker-end="url(#da)"/>
+        <path id="d8" class="flow-path" stroke="#00d4ff" d="M 390,208 L 440,208" marker-end="url(#da)"/>
+        <path id="d9" class="flow-path" stroke="#00d4ff" d="M 570,208 L 620,208" marker-end="url(#da)"/>
+
+        <text x="480" y="300" fill="#ffd43b" font-size="14" font-weight="bold" text-anchor="middle" data-en="Collaboration Sync" data-zh="协作同步">Collaboration Sync</text>
+        <rect x="60" y="320" width="120" height="56" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="120" y="343" fill="white" font-size="10" font-weight="600" text-anchor="middle">🗄️ Scene</text>
+        <text x="120" y="358" fill="#8888aa" font-size="8" text-anchor="middle" data-en="local changes" data-zh="本地变更">local changes</text>
+        <rect x="230" y="320" width="120" height="56" rx="10" fill="#2a2850" stroke="#ffd43b" stroke-width="2"/>
+        <text x="290" y="343" fill="white" font-size="10" font-weight="600" text-anchor="middle">🔒 Encrypt</text>
+        <text x="290" y="358" fill="#8888aa" font-size="8" text-anchor="middle">AES-GCM</text>
+        <rect x="400" y="320" width="120" height="56" rx="10" fill="#2a2850" stroke="#ffd43b" stroke-width="2"/>
+        <text x="460" y="343" fill="white" font-size="10" font-weight="600" text-anchor="middle">📡 Socket.IO</text>
+        <text x="460" y="358" fill="#8888aa" font-size="8" text-anchor="middle" data-en="WebSocket" data-zh="WebSocket 连接">WebSocket</text>
+        <rect x="570" y="320" width="120" height="56" rx="10" fill="#2a2850" stroke="#ffd43b" stroke-width="2"/>
+        <text x="630" y="343" fill="white" font-size="10" font-weight="600" text-anchor="middle">🔓 Decrypt</text>
+        <text x="630" y="358" fill="#8888aa" font-size="8" text-anchor="middle" data-en="friend's browser" data-zh="朋友的浏览器">friend's browser</text>
+        <rect x="740" y="320" width="130" height="56" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="805" y="343" fill="white" font-size="10" font-weight="600" text-anchor="middle">⚖️ Reconcile</text>
+        <text x="805" y="358" fill="#8888aa" font-size="8" text-anchor="middle" data-en="version check" data-zh="版本校验">version check</text>
+        <path id="d10" class="flow-path" stroke="#ffd43b" d="M 180,348 L 230,348" marker-end="url(#da)"/>
+        <path id="d11" class="flow-path" stroke="#ffd43b" d="M 350,348 L 400,348" marker-end="url(#da)"/>
+        <path id="d12" class="flow-path" stroke="#ffd43b" d="M 520,348 L 570,348" marker-end="url(#da)"/>
+        <path id="d13" class="flow-path" stroke="#ff6b9d" d="M 690,348 L 740,348" marker-end="url(#da)"/>
+
+        <text x="480" y="440" fill="#c39eff" font-size="14" font-weight="bold" text-anchor="middle" data-en="Undo/Redo (Delta System)" data-zh="撤销/重做（差异系统）">Undo/Redo (Delta System)</text>
+        <rect x="100" y="460" width="140" height="50" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="170" y="482" fill="white" font-size="10" font-weight="600" text-anchor="middle" data-en="User Edit" data-zh="用户编辑">User Edit</text>
+        <text x="170" y="496" fill="#8888aa" font-size="8" text-anchor="middle" data-en="IMMEDIATELY capture" data-zh="立即捕获">IMMEDIATELY capture</text>
+        <rect x="300" y="460" width="140" height="50" rx="10" fill="#2a2850" stroke="#c39eff" stroke-width="2"/>
+        <text x="370" y="482" fill="white" font-size="10" font-weight="600" text-anchor="middle" data-en="Store → Delta" data-zh="存储 → 差异">Store → Delta</text>
+        <text x="370" y="496" fill="#8888aa" font-size="8" text-anchor="middle" data-en="records difference" data-zh="记录差异">records difference</text>
+        <rect x="500" y="460" width="140" height="50" rx="10" fill="#2a2850" stroke="#c39eff" stroke-width="2"/>
+        <text x="570" y="482" fill="white" font-size="10" font-weight="600" text-anchor="middle">⏪ History Stack</text>
+        <text x="570" y="496" fill="#8888aa" font-size="8" text-anchor="middle" data-en="undo / redo" data-zh="撤销 / 重做">undo / redo</text>
+        <rect x="700" y="460" width="160" height="50" rx="10" fill="#2a2850" stroke="#ff6b9d" stroke-width="2"/>
+        <text x="780" y="482" fill="white" font-size="10" font-weight="600" text-anchor="middle" data-en="Apply Inverse Delta" data-zh="应用反向差异">Apply Inverse Delta</text>
+        <text x="780" y="496" fill="#8888aa" font-size="8" text-anchor="middle" data-en="Ctrl+Z = reverse!" data-zh="Ctrl+Z = 反转！">Ctrl+Z = reverse!</text>
+        <path id="d14" class="flow-path" stroke="#c39eff" d="M 240,485 L 300,485" marker-end="url(#da)"/>
+        <path id="d15" class="flow-path" stroke="#c39eff" d="M 440,485 L 500,485" marker-end="url(#da)"/>
+        <path id="d16" class="flow-path" stroke="#c39eff" d="M 640,485 L 700,485" marker-end="url(#da)"/>
+      </svg>
+    </div>
+  </section>
+</main>
+
+<div class="detail-panel" id="detail-panel">
+  <button class="close-btn" onclick="closePanel()">&times;</button>
+  <h2 id="panel-title"></h2>
+  <div id="panel-tags"></div>
+  <div class="desc" id="panel-desc"></div>
+  <div class="connections" id="panel-connections"></div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<script>
+let currentLang='en';
+function toggleLang(){
+  currentLang=currentLang==='en'?'zh':'en';
+  document.querySelectorAll('[data-en]').forEach(el=>{el.textContent=el.getAttribute('data-'+currentLang)});
+  document.querySelectorAll('[data-en-placeholder]').forEach(el=>{el.placeholder=el.getAttribute('data-'+currentLang+'-placeholder')});
+}
+// === THEME TOGGLE ===
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('theme-btn').textContent = next === 'dark' ? '🌙' : '☀️';
+}
+// === STARRY NIGHT BACKGROUND ===
+function createStars() {
+  var container = document.getElementById('starry-bg');
+  if (!container) return;
+  while (container.firstChild) { container.removeChild(container.firstChild); }
+  for (var i = 0; i < 60; i++) {
+    var star = document.createElement('div');
+    star.className = Math.random() > 0.3 ? 'star dim' : 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+    star.style.animationDelay = Math.random() * 3 + 's';
+    container.appendChild(star);
+  }
+  var nebulae = [
+    { x: '20%', y: '15%', size: '300px', color: '#5a4a9a' },
+    { x: '70%', y: '60%', size: '400px', color: '#4a3a8a' },
+    { x: '50%', y: '85%', size: '250px', color: '#5a5aa0' }
+  ];
+  nebulae.forEach(function(n) {
+    var el = document.createElement('div');
+    el.className = 'nebula';
+    el.style.left = n.x; el.style.top = n.y;
+    el.style.width = n.size; el.style.height = n.size;
+    el.style.background = n.color;
+    container.appendChild(el);
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
+  createStars();
+});
+// === TAB SWITCHING ===
+function switchTab(tab){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('nav .tabs button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelector('[data-tab="'+tab+'"]').classList.add('active');
+  closePanel();
+}
+document.addEventListener('click',e=>{const s=e.target.closest('.story-step');if(s)s.classList.toggle('expanded')});
+function openPanel(d){
+  const p=document.getElementById('detail-panel');
+  document.getElementById('panel-title').textContent=currentLang==='zh'?(d.name_zh||d.name):d.name;
+  document.getElementById('panel-tags').textContent='';
+  (d.tags||[]).forEach(t=>{const s=document.createElement('span');s.className='tag';s.textContent=t;document.getElementById('panel-tags').appendChild(s)});
+  const descEl=document.getElementById('panel-desc');
+  descEl.textContent='';
+  const pp=document.createElement('p');
+  pp.textContent=currentLang==='zh'?(d.desc_zh||d.desc):d.desc;
+  descEl.appendChild(pp);
+  const connEl=document.getElementById('panel-connections');
+  connEl.textContent='';
+  if(d.connections&&d.connections.length){
+    const h=document.createElement('h4');h.textContent=currentLang==='zh'?'关联':'Connections';connEl.appendChild(h);
+    d.connections.forEach(c=>{
+      const div=document.createElement('div');div.className='conn-item';
+      const arrow=document.createElement('span');arrow.className='conn-arrow';arrow.textContent=c.direction==='out'?'\u2192':'\u2190';
+      div.appendChild(arrow);
+      const txt=document.createTextNode(' '+c.target+': '+(currentLang==='zh'?(c.label_zh||c.label):c.label));
+      div.appendChild(txt);connEl.appendChild(div);
+    });
+  }
+  p.classList.add('open');
+}
+function closePanel(){document.getElementById('detail-panel').classList.remove('open')}
+const tooltip=document.getElementById('tooltip');
+function showTooltip(e,t){tooltip.textContent=t;tooltip.style.left=e.clientX+10+'px';tooltip.style.top=e.clientY+10+'px';tooltip.classList.add('visible')}
+function hideTooltip(){tooltip.classList.remove('visible')}
+function filterComponents(q){q=q.toLowerCase();document.querySelectorAll('.node-group').forEach(n=>{const nm=(n.getAttribute('data-name')||'').toLowerCase();n.style.opacity=!q||nm.includes(q)?'1':'0.2'})}
+const COMPONENTS={
+  "canvas-system":{name:"The Magic Whiteboard",name_zh:"\u9b54\u6cd5\u767d\u677f",tooltip:"Three stacked canvases for smooth rendering",tooltip_zh:"\u4e09\u5c42\u53e0\u52a0\u7684\u753b\u5e03\uff0c\u5b9e\u73b0\u6d41\u7545\u6e32\u67d3",desc:"Uses THREE separate HTML canvases stacked like glass plates. StaticCanvas (bottom) renders committed elements. InteractiveCanvas (middle) handles selection and cursors. NewElementCanvas (top) renders live drawing. Only the top layer redraws during drag!",desc_zh:"\u7528\u4e09\u5c42\u72ec\u7acb\u7684 HTML Canvas \u50cf\u73bb\u7483\u677f\u4e00\u6837\u53e0\u5728\u4e00\u8d77\u3002StaticCanvas\uff08\u5e95\u5c42\uff09\u6e32\u67d3\u5df2\u5b8c\u6210\u5143\u7d20\u3002InteractiveCanvas\uff08\u4e2d\u5c42\uff09\u5904\u7406\u9009\u62e9\u548c\u5149\u6807\u3002NewElementCanvas\uff08\u9876\u5c42\uff09\u6e32\u67d3\u5b9e\u65f6\u7ed8\u5236\u3002\u62d6\u52a8\u65f6\u53ea\u6709\u9876\u5c42\u91cd\u7ed8\uff01",tags:["React","Canvas API","StaticCanvas","InteractiveCanvas","NewElementCanvas"],connections:[{target:"Element System",direction:"out",label:"renders elements via renderElement()",label_zh:"\u901a\u8fc7 renderElement() \u6e32\u67d3\u5143\u7d20"},{target:"Scene",direction:"in",label:"reads element list",label_zh:"\u8bfb\u53d6\u5143\u7d20\u5217\u8868"}]},
+  "element-system":{name:"The Shape Factory",name_zh:"\u5f62\u72b6\u5de5\u5382",tooltip:"Creates and renders all drawable shapes",tooltip_zh:"\u521b\u5efa\u548c\u6e32\u67d3\u6240\u6709\u53ef\u7ed8\u5236\u7684\u5f62\u72b6",desc:"Every shape is an immutable object with id, position, dimensions, color, and a seed number for the hand-drawn look. Created via newElement(), modified ONLY through mutateElement() which increments version and clears ShapeCache.",desc_zh:"\u6bcf\u4e2a\u5f62\u72b6\u90fd\u662f\u4e0d\u53ef\u53d8\u5bf9\u8c61\uff0c\u5305\u542b id\u3001\u4f4d\u7f6e\u3001\u5c3a\u5bf8\u3001\u989c\u8272\u548c\u624b\u7ed8\u98ce\u683c\u7684 seed \u6570\u5b57\u3002\u901a\u8fc7 newElement() \u521b\u5efa\uff0c\u53ea\u80fd\u901a\u8fc7 mutateElement() \u4fee\u6539\u3002",tags:["TypeScript","roughjs","perfect-freehand","nanoid","immutable"],connections:[{target:"Scene",direction:"out",label:"inserts elements",label_zh:"\u63d2\u5165\u5143\u7d20"},{target:"Canvas",direction:"in",label:"rendered via ShapeCache",label_zh:"\u901a\u8fc7 ShapeCache \u6e32\u67d3"}]},
+  "scene":{name:"The Filing Cabinet",name_zh:"\u6587\u4ef6\u67dc",tooltip:"Stores all elements in sorted order",tooltip_zh:"\u6309\u987a\u5e8f\u5b58\u50a8\u6240\u6709\u5143\u7d20",desc:"Single source of truth for all elements. Uses fractional indexing for ordering (insert between 1.0 and 2.0 = 1.5). Emits change events to trigger canvas re-renders. Soft-deletes elements for collaboration reconciliation.",desc_zh:"\u6240\u6709\u5143\u7d20\u7684\u552f\u4e00\u6570\u636e\u6e90\u3002\u7528\u5206\u6570\u7d22\u5f15\u6392\u5e8f\uff08\u5728 1.0 \u548c 2.0 \u4e4b\u95f4\u63d2\u5165 = 1.5\uff09\u3002\u53d1\u51fa\u53d8\u5316\u4e8b\u4ef6\u89e6\u53d1\u753b\u5e03\u91cd\u7ed8\u3002\u8f6f\u5220\u9664\u5143\u7d20\u7528\u4e8e\u534f\u4f5c\u8c03\u548c\u3002",tags:["data model","fractional indexing","ordered Map","event emitter"],connections:[{target:"History",direction:"out",label:"captures deltas",label_zh:"\u6355\u83b7\u5dee\u5f02"},{target:"Collab",direction:"out",label:"broadcasts changes",label_zh:"\u5e7f\u64ad\u53d8\u5316"},{target:"Canvas",direction:"out",label:"triggers re-render",label_zh:"\u89e6\u53d1\u91cd\u7ed8"}]},
+  "action-manager":{name:"The Command Center",name_zh:"\u6307\u6325\u4e2d\u5fc3",tooltip:"Routes all user operations",tooltip_zh:"\u8def\u7531\u6240\u6709\u7528\u6237\u64cd\u4f5c",desc:"Every toolbar click, keyboard shortcut, and menu item is an Action with a perform() function. ActionManager routes inputs to the right handler. Examples: delete, flip, group, copy, paste, export.",desc_zh:"\u6bcf\u4e2a\u5de5\u5177\u680f\u70b9\u51fb\u3001\u952e\u76d8\u5feb\u6377\u952e\u548c\u83dc\u5355\u9879\u90fd\u662f\u4e00\u4e2a\u5e26 perform() \u51fd\u6570\u7684 Action\u3002ActionManager \u628a\u8f93\u5165\u8def\u7531\u5230\u6b63\u786e\u7684\u5904\u7406\u5668\u3002",tags:["Actions","keyboard shortcuts","context menu","toolbar"],connections:[{target:"Scene",direction:"out",label:"updates elements",label_zh:"\u66f4\u65b0\u5143\u7d20"},{target:"Canvas",direction:"out",label:"triggers re-render",label_zh:"\u89e6\u53d1\u91cd\u7ed8"}]},
+  "history-store":{name:"The Time Machine",name_zh:"\u65f6\u5149\u673a",tooltip:"Delta-based undo/redo system",tooltip_zh:"\u57fa\u4e8e\u5dee\u5f02\u7684\u64a4\u9500/\u91cd\u505a\u7cfb\u7edf",desc:"Records every change as a delta (difference), not a snapshot. Three capture modes: IMMEDIATELY (user edits), NEVER (remote collab), EVENTUALLY (buffered async). Undo = apply inverse delta. Super memory-efficient!",desc_zh:"\u628a\u6bcf\u6b21\u53d8\u5316\u8bb0\u5f55\u4e3a\u5dee\u5f02\u503c\u800c\u4e0d\u662f\u5feb\u7167\u3002\u4e09\u79cd\u6355\u83b7\u6a21\u5f0f\uff1aIMMEDIATELY\uff08\u7528\u6237\u7f16\u8f91\uff09\u3001NEVER\uff08\u8fdc\u7a0b\u534f\u4f5c\uff09\u3001EVENTUALLY\uff08\u7f13\u51b2\u5f02\u6b65\uff09\u3002\u64a4\u9500 = \u5e94\u7528\u53cd\u5411\u5dee\u5f02\u3002\u8d85\u7ea7\u7701\u5185\u5b58\uff01",tags:["delta system","undo/redo","Store","CaptureUpdateAction"],connections:[{target:"Scene",direction:"in",label:"captures deltas from changes",label_zh:"\u4ece\u53d8\u5316\u4e2d\u6355\u83b7\u5dee\u5f02"}]},
+  "collab":{name:"The Walkie-Talkie",name_zh:"\u5bf9\u8bb2\u673a",tooltip:"Real-time collaboration via Socket.IO",tooltip_zh:"\u901a\u8fc7 Socket.IO \u5b9e\u65f6\u534f\u4f5c",desc:"Socket.IO WebSockets with end-to-end AES-GCM encryption. Key hides in URL after # (server never sees it). reconcileElements() resolves conflicts by version number. See remote cursors in real-time!",desc_zh:"\u901a\u8fc7 Socket.IO WebSocket + \u7aef\u5230\u7aef AES-GCM \u52a0\u5bc6\u3002\u5bc6\u94a5\u85cf\u5728 URL \u7684 # \u540e\u9762\uff08\u670d\u52a1\u5668\u770b\u4e0d\u5230\uff09\u3002reconcileElements() \u901a\u8fc7\u7248\u672c\u53f7\u89e3\u51b3\u51b2\u7a81\u3002\u5b9e\u65f6\u770b\u5230\u8fdc\u7a0b\u5149\u6807\uff01",tags:["Socket.IO","AES-GCM","WebSocket","reconcile","encrypted"],connections:[{target:"Scene",direction:"in",label:"receives local changes",label_zh:"\u63a5\u6536\u672c\u5730\u53d8\u5316"},{target:"Storage",direction:"out",label:"persists to Firebase",label_zh:"\u6301\u4e45\u5316\u5230 Firebase"}]},
+  "storage":{name:"The Treasure Chest",name_zh:"\u767e\u5b9d\u7bb1",tooltip:"Dual storage: IndexedDB + Firebase",tooltip_zh:"\u53cc\u91cd\u5b58\u50a8\uff1aIndexedDB + Firebase",desc:"Three storage layers: IndexedDB for local autosave, Firebase Firestore for cloud scene data, Firebase Storage for images. Tab sync via BroadcastChannel keeps multiple tabs in sync. Works offline!",desc_zh:"\u4e09\u5c42\u5b58\u50a8\uff1aIndexedDB \u672c\u5730\u81ea\u52a8\u4fdd\u5b58\uff0cFirebase Firestore \u4e91\u7aef\u573a\u666f\u6570\u636e\uff0cFirebase Storage \u56fe\u7247\u3002BroadcastChannel \u6807\u7b7e\u9875\u540c\u6b65\u3002\u79bb\u7ebf\u4e5f\u80fd\u7528\uff01",tags:["IndexedDB","Firebase","Firestore","BroadcastChannel","offline"],connections:[{target:"Scene",direction:"out",label:"restores on load",label_zh:"\u52a0\u8f7d\u65f6\u6062\u590d"},{target:"Collab",direction:"in",label:"receives data to persist",label_zh:"\u63a5\u6536\u6301\u4e45\u5316\u6570\u636e"}]}
+};
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.node-group').forEach(n=>{
+    const id=n.getAttribute('data-id');
+    if(id&&COMPONENTS[id]){
+      n.addEventListener('click',()=>openPanel(COMPONENTS[id]));
+      n.addEventListener('mouseenter',e=>showTooltip(e,currentLang==='zh'?(COMPONENTS[id].tooltip_zh||COMPONENTS[id].tooltip):COMPONENTS[id].tooltip));
+      n.addEventListener('mouseleave',hideTooltip);
+    }
+  });
+  document.querySelectorAll('.flow-path').forEach(path=>{
+    const particle=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    particle.classList.add('flow-particle');
+    particle.setAttribute('fill',path.getAttribute('stroke')||'#00d4ff');
+    const anim=document.createElementNS('http://www.w3.org/2000/svg','animateMotion');
+    anim.setAttribute('dur',(2+Math.random()*2)+'s');
+    anim.setAttribute('repeatCount','indefinite');
+    const mp=document.createElementNS('http://www.w3.org/2000/svg','mpath');
+    mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#'+path.id);
+    anim.appendChild(mp);particle.appendChild(anim);path.parentNode.appendChild(particle);
+  });
+});
+</script>
+</body>
+</html>
