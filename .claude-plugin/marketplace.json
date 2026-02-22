@@ -1,0 +1,33 @@
+{
+  "name": "codebase-visualizer-marketplace",
+  "owner": {
+    "name": "Amanda",
+    "email": "flyrhyme@gmail.com"
+  },
+  "metadata": {
+    "description": "A marketplace for the Codebase Visualizer skill - transform any codebase into interactive visual HTML guides with up to 7 tabs",
+    "version": "2.0.0"
+  },
+  "plugins": [
+    {
+      "name": "codebase-visualizer",
+      "source": {
+        "source": "github",
+        "repo": "belugatempo-dot/codebase-visualizer"
+      },
+      "description": "Transform any codebase into an interactive visual HTML guide with up to 7 tabs: story mode, architecture, how-to, data flow, quality metrics, key features, and database schema. Bilingual CN/EN support.",
+      "version": "2.0.0",
+      "author": {
+        "name": "Amanda"
+      },
+      "keywords": [
+        "codebase",
+        "visualizer",
+        "architecture",
+        "diagram",
+        "interactive",
+        "bilingual"
+      ]
+    }
+  ]
+}

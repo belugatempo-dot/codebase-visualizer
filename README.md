@@ -1,24 +1,31 @@
 # Codebase Visualizer
 
-A Claude Code skill that transforms any codebase into an interactive, single-file HTML guide with a starry night purple theme.
+A Claude Code skill that transforms any codebase into an interactive, single-file HTML guide with a starry night theme.
 
 ## What it does
 
-Give Claude Code any codebase, and it generates a **self-contained HTML file** (zero dependencies) with 4 interactive tabs:
+Give Claude Code any codebase, and it generates a **self-contained HTML file** (zero dependencies) with up to 7 interactive tabs:
 
 | Tab | Description |
 |---|---|
-| **Story Mode** | Explains the codebase like a story — with acts, characters, and plot twists |
-| **Architecture** | Interactive SVG diagram — click any component to see details |
+| **Story Mode** | 7-act narrative with verb-labeled user journey steps |
+| **Architecture** | Interactive SVG diagram — click any component to see inline details |
 | **How to Use** | Step-by-step developer guide with code snippets |
 | **Data Flow** | Animated SVG showing how data moves through the system |
+| **Quality & Security** | Test metrics, security features, code quality badges |
+| **Key Features** | Project-specific feature showcase (grids, matrices, flows) |
+| **Database** | Schema explorer with interactive INSERT/APPROVE demo (optional) |
 
 ### Features
 
 - **Bilingual** — Toggle between English and Chinese (EN / 中文)
-- **Dark / Light theme** — Default: starry night purple with twinkling stars
+- **Dark / Light theme** — Default: slate-to-indigo starry night with gold accents
 - **Fully self-contained** — Single HTML file, no build step, no dependencies
 - **Interactive** — Click nodes, search components, hover for tooltips
+- **Inline detail panel** — Slides down below architecture diagram (not a side panel)
+- **Optional tabs** — Database tab hidden when project has no DB
+- **Footer with CTA** — Auto-detects locale for project link
+- **3 responsive breakpoints** — Works on desktop, tablet, and mobile
 
 ## Screenshot
 

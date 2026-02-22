@@ -35,7 +35,7 @@ Map technical concepts to real-world things a 10-year-old already knows:
 
 ## Story Structure
 
-Every project story follows this 5-act structure:
+Every project story follows a **7-act structure**:
 
 ### Act 1: "What is this thing?" (WHAT)
 - One-sentence elevator pitch a kid can understand
@@ -47,17 +47,23 @@ Every project story follows this 5-act structure:
 - Each character gets a name, emoji, and one-line role
 - Keep to 3-7 characters max (group minor components)
 
-### Act 3: "What happens when you use it?" (HOW - User Journey)
-- Walk through the most common user action step by step
-- "When you click the button, here's what happens behind the scenes..."
-- Use numbered steps with emojis
+### Acts 3-5: User Journey Steps (Three VERB-labeled acts)
 
-### Act 4: "How do the characters work together?" (COLLABORATION)
+Pick the **3 most important actions** in the primary user journey. Label each with a single verb that captures the essence of that step.
+
+**How to choose the 3 verbs:**
+1. What's the **first thing** a user does? (e.g. CREATE, SETUP, REGISTER, CONNECT)
+2. What's the **core interaction**? (e.g. DISCOVER, SEARCH, BROWSE, EXPLORE, PLAY)
+3. What's the **outcome/reward**? (e.g. EARN, DEPLOY, PUBLISH, SHARE, RECEIVE)
+
+Each act walks through that journey step, showing what happens behind the scenes.
+
+### Act 6: "How do the characters work together?" (COLLABORATE)
 - Show the data flow as a conversation between characters
 - "The Waiter tells the Chef: 'Table 3 wants spaghetti!'"
 - This maps to the architecture diagram
 
-### Act 5: "Cool tricks and superpowers" (SPECIAL FEATURES)
+### Act 7: "Cool tricks and superpowers" (SUPERPOWERS)
 - Highlight 2-3 interesting technical features
 - Frame them as "superpowers" of the project
 - "TodoBot has a superpower: it can remember your list even after you turn off the computer!"
@@ -112,16 +118,33 @@ Chinese should feel natural, not translated. Use colloquial Chinese that kids us
 
 ### Example: Todo App
 ```
-Act 1: "Hi! I'm TodoBot! I'm like a super-powered sticky note that never falls off your fridge!"
-Act 2: Characters - The Notepad (React UI), The Messenger (API), The Filing Cabinet (Database)
-Act 3: "You write 'Buy milk' → The Notepad shows it → The Messenger runs to the Filing Cabinet → The Filing Cabinet saves it forever!"
-Act 4: "The Notepad says 'New todo!' → Messenger says 'On it!' → Filing Cabinet says 'Saved!'"
-Act 5: "Superpower: TodoBot can show your todos on your phone AND computer at the same time!"
+Act 1 — WHAT: "Hi! I'm TodoBot! I'm like a super-powered sticky note that never falls off your fridge!"
+Act 2 — WHO: Characters - The Notepad (React UI), The Messenger (API), The Filing Cabinet (Database)
+Act 3 — ADD: "You write 'Buy milk' → The Notepad shows it on screen."
+Act 4 — SAVE: "The Messenger runs to the Filing Cabinet → The Filing Cabinet saves it forever!"
+Act 5 — CHECK: "You tap the checkbox → 'Buy milk' gets a green checkmark → Done!"
+Act 6 — COLLABORATE: "The Notepad says 'New todo!' → Messenger says 'On it!' → Filing Cabinet says 'Saved!'"
+Act 7 — SUPERPOWERS: "TodoBot can show your todos on your phone AND computer at the same time!"
 ```
 
 ### Example: E-commerce App
 ```
-Act 1: "Welcome to ShopWorld! It's like a magical store where you can buy things without leaving your couch!"
-Act 2: Characters - The Storefront (Next.js), The Cashier (Payment API), The Warehouse (Database), The Delivery Truck (Notification Service)
-Act 3: "You find a cool toy → Add to cart → The Cashier counts your money → The Warehouse packs your order → The Delivery Truck tells you 'It's on the way!'"
+Act 1 — WHAT: "Welcome to ShopWorld! It's like a magical store where you can buy things without leaving your couch!"
+Act 2 — WHO: Characters - The Storefront (Next.js), The Cashier (Payment API), The Warehouse (Database), The Delivery Truck (Notification Service)
+Act 3 — BROWSE: "You scroll through the store and find a cool toy. The Storefront shows you the price, reviews, and a big shiny 'Add to Cart' button."
+Act 4 — BUY: "You click 'Pay Now' → The Cashier counts your money → The Warehouse packs your order and marks it 'Shipped'!"
+Act 5 — RECEIVE: "The Delivery Truck zooms off and tells you 'It's on the way!' with a tracking number."
+Act 6 — COLLABORATE: "Storefront: 'Customer wants the red one!' → Cashier: 'Payment cleared!' → Warehouse: 'Packing now!' → Delivery: 'On my way!'"
+Act 7 — SUPERPOWERS: "ShopWorld remembers your size, suggests things you'll love, and can handle a million shoppers at once!"
+```
+
+### Example: Family Behavior Tracker
+```
+Act 1 — WHAT: "StarQuest turns everyday tasks into epic family adventures!"
+Act 2 — WHO: Frontend (storefront window), Server (the brain), Database (a vault), Auth (security guard), Email (messenger owl), Analytics (wise oracle)
+Act 3 — CREATE: "Mom creates 'Help with Dishes' as a Bonus quest worth 15 stars."
+Act 4 — DISCOVER: "Alisa opens her phone and sees the quest — she only sees bonus quests!"
+Act 5 — EARN: "Alisa completes the quest, taps 'Request Stars', Mom approves, and her balance jumps!"
+Act 6 — COLLABORATE: "Frontend: 'Alisa wants stars!' → Server: 'Checking auth...' → Database: 'Saved!' → Email: 'Mom, new request!'"
+Act 7 — SUPERPOWERS: "Credit system (borrow stars!), auto-reports, one-click demo mode, 2,849 tests!"
 ```

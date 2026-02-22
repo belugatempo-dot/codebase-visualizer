@@ -1,7 +1,7 @@
 {
   "name": "codebase-visualizer",
-  "version": "1.0.0",
-  "description": "Transform any codebase into an interactive visual HTML guide that a 10-year-old can understand. Generates a single self-contained HTML file with animated architecture diagrams, clickable component explorer, story-mode narrative, data flow animations, and bilingual CN/EN support.",
+  "version": "2.0.0",
+  "description": "Transform any codebase into an interactive visual HTML guide with up to 7 tabs: story mode, architecture diagram, how-to guide, data flow, quality metrics, key features, and database schema. Bilingual CN/EN, dark/light theme, fully self-contained.",
   "author": {
     "name": "Amanda",
     "email": "flyrhyme@gmail.com"

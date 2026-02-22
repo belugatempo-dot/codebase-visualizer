@@ -5,46 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PROJECT_NAME}} - Interactive Codebase Guide</title>
 <style>
-  /* === DARK THEME (default) === */
+  /* === DARK THEME (starry night) === */
   :root, [data-theme="dark"] {
-    --bg: #3d3b6e;
-    --bg-gradient: linear-gradient(170deg, #474582 0%, #3d3b6e 35%, #4a4880 65%, #3a385e 100%);
-    --card: #2a2850;
-    --accent: #00d4ff;
-    --accent2: #ff6b9d;
-    --accent3: #c39eff;
-    --accent4: #51cf66;
-    --text: #e8e8f0;
-    --text-dim: #9999bb;
-    --border: #4a4888;
-    --glow: rgba(0, 212, 255, 0.15);
-    --nav-bg: rgba(50, 48, 90, 0.95);
-    --node-fill: #2a2850;
+    --bg: #0f172a;
+    --bg-gradient: linear-gradient(170deg, #1e3a5f 0%, #0f172a 35%, #312e81 65%, #0f172a 100%);
+    --card: rgba(75, 85, 160, 0.45);
+    --accent: #FFD700;
+    --accent2: #FBBF24;
+    --accent3: #4F46E5;
+    --accent4: #10B981;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --border: rgba(255, 255, 255, 0.15);
+    --glow: rgba(255, 215, 0, 0.12);
+    --nav-bg: rgba(15, 23, 42, 0.88);
+    --node-fill: rgba(75, 85, 160, 0.5);
     --node-label: #ffffff;
-    --node-sublabel: #8888aa;
-    --panel-shadow: rgba(0, 0, 0, 0.4);
+    --node-sublabel: #94a3b8;
+    --panel-shadow: rgba(0, 0, 0, 0.5);
     --conn-bg: rgba(255, 255, 255, 0.03);
+    --danger: #EF4444;
   }
-
   /* === LIGHT THEME === */
   [data-theme="light"] {
     --bg: #f5f5fa;
     --bg-gradient: none;
     --card: #ffffff;
-    --accent: #0099cc;
-    --accent2: #e0457b;
-    --accent3: #8b5cf6;
+    --accent: #b8860b;
+    --accent2: #d4a017;
+    --accent3: #4338ca;
     --accent4: #16a34a;
     --text: #1a1a2e;
     --text-dim: #64748b;
     --border: #e2e8f0;
-    --glow: rgba(0, 153, 204, 0.08);
+    --glow: rgba(184, 134, 11, 0.08);
     --nav-bg: rgba(245, 245, 250, 0.95);
     --node-fill: #ffffff;
     --node-label: #1a1a2e;
     --node-sublabel: #64748b;
     --panel-shadow: rgba(0, 0, 0, 0.1);
     --conn-bg: rgba(0, 0, 0, 0.03);
+    --danger: #dc2626;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -64,186 +65,185 @@
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem; height: 60px;
+    padding: 0 2rem; height: 56px;
   }
   nav .logo {
-    font-size: 1.3rem; font-weight: 700;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 12px rgba(255,215,0,0.3);
+    white-space: nowrap;
   }
-  nav .tabs { display: flex; gap: 0.5rem; }
+  nav .tabs { display: flex; gap: 0.4rem; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   nav .tabs button {
     background: none; border: none; color: var(--text-dim);
-    padding: 0.5rem 1rem; cursor: pointer; border-radius: 8px;
-    font-size: 0.9rem; transition: all 0.3s;
+    padding: 0.45rem 0.9rem; cursor: pointer; border-radius: 8px;
+    font-size: 0.88rem; transition: all 0.3s; white-space: nowrap;
   }
-  nav .tabs button:hover { color: var(--text); background: var(--border); }
+  nav .tabs button:hover { color: var(--text); background: rgba(255,255,255,0.06); }
   nav .tabs button.active {
     color: var(--accent); background: var(--glow);
-    box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+    box-shadow: 0 0 12px rgba(255,215,0,0.08);
   }
-  nav .nav-controls { display: flex; gap: 0.5rem; align-items: center; }
-  nav .lang-toggle, nav .theme-toggle {
-    background: var(--border); border: 1px solid var(--border);
-    color: var(--text); padding: 0.4rem 0.8rem; border-radius: 6px;
-    cursor: pointer; font-size: 0.85rem; transition: all 0.3s;
+  nav .nav-controls { display: flex; gap: 0.4rem; align-items: center; }
+  nav .ctrl-btn {
+    background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+    color: var(--text); padding: 0.35rem 0.7rem; border-radius: 6px;
+    cursor: pointer; font-size: 0.82rem; transition: all 0.3s;
   }
-  nav .lang-toggle:hover, nav .theme-toggle:hover {
-    border-color: var(--accent); color: var(--accent);
-  }
+  nav .ctrl-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-  /* === MAIN CONTENT === */
-  main { margin-top: 60px; padding: 2rem; max-width: 1400px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
+  /* === MAIN === */
+  main { margin-top: 56px; padding: 2rem; max-width: 1200px; margin-left: auto; margin-right: auto; position: relative; z-index: 1; }
   section { display: none; animation: fadeIn 0.4s ease; }
   section.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   /* === HERO (Story Mode) === */
   .hero {
-    text-align: center; padding: 3rem 1rem;
+    text-align: center; padding: 3rem 1rem 2rem;
     background: radial-gradient(ellipse at center, var(--glow) 0%, transparent 70%);
-    border-radius: 20px; margin-bottom: 2rem;
+    border-radius: 20px; margin-bottom: 2.5rem;
   }
-  .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-  .hero .subtitle { color: var(--text-dim); font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto; }
-  .hero .mascot { font-size: 4rem; margin-bottom: 1rem; }
+  .hero .mascot { font-size: 4rem; margin-bottom: 0.8rem; }
+  .hero h1 { font-size: 2.4rem; margin-bottom: 0.8rem; color: var(--accent); }
+  .hero .subtitle { color: var(--text-dim); font-size: 1.15rem; line-height: 1.8; max-width: 700px; margin: 0 auto; }
 
-  /* === STORY CARDS === */
-  .story-timeline { position: relative; padding-left: 3rem; }
+  /* === STORY TIMELINE === */
+  .story-timeline { position: relative; padding-left: 3rem; max-width: 900px; margin: 0 auto; }
   .story-timeline::before {
     content: ''; position: absolute; left: 1rem; top: 0; bottom: 0;
-    width: 3px; background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--accent3));
+    width: 3px; background: linear-gradient(to bottom, var(--accent), var(--accent3), var(--accent4));
     border-radius: 3px;
   }
   .story-step {
-    position: relative; margin-bottom: 2rem;
+    position: relative; margin-bottom: 1.5rem;
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.5rem 2rem;
+    border-radius: 14px; padding: 1.4rem 1.8rem;
     cursor: pointer; transition: all 0.3s;
   }
   .story-step:hover {
     border-color: var(--accent);
-    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
-    transform: translateX(5px);
+    box-shadow: 0 4px 20px rgba(255,215,0,0.08);
+    transform: translateX(4px);
   }
   .story-step::before {
-    content: attr(data-icon); position: absolute; left: -2.5rem; top: 1.5rem;
-    font-size: 1.5rem; width: 2rem; text-align: center;
+    content: attr(data-icon); position: absolute; left: -2.5rem; top: 1.4rem;
+    font-size: 1.4rem; width: 2rem; text-align: center;
   }
   .story-step .step-num {
     display: inline-block; background: var(--glow); color: var(--accent);
-    padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
-    font-weight: 600; margin-bottom: 0.5rem;
+    padding: 0.15rem 0.55rem; border-radius: 4px; font-size: 0.72rem;
+    font-weight: 600; margin-bottom: 0.4rem; letter-spacing: 0.5px;
   }
-  .story-step h3 { margin-bottom: 0.5rem; font-size: 1.1rem; }
-  .story-step p { color: var(--text-dim); line-height: 1.7; font-size: 0.95rem; }
+  .story-step h3 { margin-bottom: 0.4rem; font-size: 1.05rem; }
+  .story-step p { color: var(--text-dim); line-height: 1.7; font-size: 0.92rem; }
   .story-step .detail {
-    display: none; margin-top: 1rem; padding-top: 1rem;
-    border-top: 1px solid var(--border); color: var(--text); line-height: 1.8;
+    display: none; margin-top: 0.8rem; padding-top: 0.8rem;
+    border-top: 1px solid var(--border); color: var(--text); line-height: 1.8; font-size: 0.92rem;
+    white-space: pre-line;
   }
   .story-step.expanded .detail { display: block; animation: fadeIn 0.3s; }
 
-  /* === ARCHITECTURE VIEW === */
-  .arch-container { display: flex; flex-direction: column; gap: 2rem; }
+  /* === ARCHITECTURE === */
+  .arch-container { display: flex; flex-direction: column; gap: 1.5rem; }
   .arch-diagram {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 2rem; min-height: 400px;
+    border-radius: 14px; padding: 1.5rem; min-height: 380px;
     position: relative; overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
   }
   .arch-diagram svg { width: 100%; height: auto; }
   .arch-legend {
     display: flex; flex-wrap: wrap; gap: 1rem;
-    padding: 1rem; background: var(--card); border-radius: 12px;
+    padding: 0.8rem 1rem; background: var(--card); border-radius: 10px;
     border: 1px solid var(--border);
   }
   .arch-legend .legend-item {
-    display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-dim);
+    display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text);
   }
-  .arch-legend .legend-dot {
-    width: 12px; height: 12px; border-radius: 50%;
-  }
+  .arch-legend .legend-dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
 
-  /* === COMPONENT NODES (clickable) === */
+  /* === COMPONENT NODES === */
   .node-group { cursor: pointer; transition: transform 0.2s; }
   .node-group:hover { transform: scale(1.05); }
-  .node-group:hover rect, .node-group:hover circle { filter: brightness(1.3); }
-  .node-rect {
-    rx: 12; ry: 12; stroke-width: 2;
-    transition: all 0.3s;
-  }
-  .node-label { fill: var(--node-label); font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-  .node-sublabel { fill: var(--node-sublabel); font-size: 10px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .node-group:hover .node-rect { stroke-width: 2.5; filter: brightness(1.2); }
+  .node-rect { rx: 12; ry: 12; stroke-width: 2; transition: all 0.3s; }
+  .node-label { fill: var(--node-label); font-size: 17px; font-weight: 600; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .node-sublabel { fill: var(--node-sublabel); font-size: 12px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
 
   /* === FLOW ARROWS === */
-  .flow-path {
-    fill: none; stroke-width: 2; stroke-dasharray: 8 4;
-    animation: flowDash 1.5s linear infinite;
-  }
+  .flow-path { fill: none; stroke-width: 2; stroke-dasharray: 8 4; animation: flowDash 1.5s linear infinite; }
   @keyframes flowDash { to { stroke-dashoffset: -24; } }
-  .flow-label {
-    font-size: 10px; fill: var(--text-dim); text-anchor: middle;
-    dominant-baseline: central;
-  }
+  .flow-label { font-size: 11px; fill: var(--text-dim); text-anchor: middle; dominant-baseline: central; }
+  .flow-particle { opacity: 0.8; }
 
-  /* === DETAIL PANEL === */
-  .detail-panel {
-    position: fixed; right: -450px; top: 60px; bottom: 0; width: 420px;
-    background: var(--card); border-left: 1px solid var(--border);
-    z-index: 99; transition: right 0.3s ease; overflow-y: auto; padding: 2rem;
+  /* === INLINE DETAIL CARD === */
+  .inline-detail {
+    display: none; margin-top: 1rem;
+    background: var(--card); border: 1px solid var(--accent);
+    border-radius: 14px; padding: 1.5rem; position: relative;
+    animation: slideDown 0.3s ease;
+    box-shadow: 0 4px 24px rgba(255,215,0,0.08);
   }
-  .detail-panel.open { right: 0; box-shadow: -10px 0 40px var(--panel-shadow); }
-  .detail-panel .close-btn {
-    position: absolute; top: 1rem; right: 1rem;
+  .inline-detail.open { display: block; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .inline-detail .close-btn {
+    position: absolute; top: 0.6rem; right: 0.8rem;
     background: none; border: none; color: var(--text-dim);
-    font-size: 1.5rem; cursor: pointer;
+    font-size: 1.4rem; cursor: pointer; line-height: 1;
   }
-  .detail-panel h2 { margin-bottom: 0.5rem; color: var(--accent); }
-  .detail-panel .tag {
+  .inline-detail .close-btn:hover { color: var(--text); }
+  .inline-detail h2 { margin-bottom: 0.4rem; color: var(--accent); font-size: 1.2rem; }
+  .inline-detail .tag {
     display: inline-block; background: var(--glow); color: var(--accent);
-    padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.75rem;
-    margin-right: 0.3rem; margin-bottom: 0.3rem;
+    padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem;
+    margin-right: 0.25rem; margin-bottom: 0.25rem;
   }
-  .detail-panel .desc { color: var(--text-dim); line-height: 1.8; margin: 1rem 0; }
-  .detail-panel .connections { margin-top: 1rem; }
-  .detail-panel .connections h4 { color: var(--accent3); margin-bottom: 0.5rem; }
-  .detail-panel .conn-item {
-    display: flex; align-items: center; gap: 0.5rem;
-    padding: 0.5rem; border-radius: 8px; margin-bottom: 0.3rem;
-    background: var(--conn-bg);
+  .inline-detail .desc { color: var(--text-dim); line-height: 1.8; margin: 0.8rem 0; font-size: 0.92rem; }
+  .inline-detail .connections { margin-top: 0.8rem; }
+  .inline-detail .connections h4 { color: var(--accent3); margin-bottom: 0.4rem; font-size: 0.92rem; }
+  .inline-detail .conn-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.4rem 0.6rem; border-radius: 6px; margin-bottom: 0.25rem;
+    background: var(--conn-bg); font-size: 0.88rem;
   }
-  .detail-panel .conn-arrow { color: var(--accent2); }
 
-  /* === HOW-TO GUIDE === */
-  .howto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  /* === HOW-TO === */
+  .howto-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; }
   .howto-card {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.5rem; transition: all 0.3s;
+    border-radius: 14px; padding: 1.4rem; transition: all 0.3s;
   }
-  .howto-card:hover { border-color: var(--accent2); transform: translateY(-3px); }
-  .howto-card .card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
-  .howto-card h3 { margin-bottom: 0.5rem; }
-  .howto-card p { color: var(--text-dim); line-height: 1.7; font-size: 0.9rem; }
+  .howto-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 4px 16px rgba(255,215,0,0.06); }
+  .howto-card .card-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+  .howto-card h3 { margin-bottom: 0.4rem; font-size: 1rem; }
+  .howto-card p { color: var(--text-dim); line-height: 1.7; font-size: 0.88rem; }
   .howto-card .steps {
-    margin-top: 1rem; padding-left: 1.2rem;
+    margin-top: 0.8rem; padding-left: 1.2rem;
     list-style: none; counter-reset: step;
   }
   .howto-card .steps li {
     counter-increment: step; position: relative;
-    padding: 0.3rem 0; color: var(--text-dim); font-size: 0.9rem;
+    padding: 0.25rem 0; color: var(--text-dim); font-size: 0.88rem;
   }
   .howto-card .steps li::before {
-    content: counter(step); position: absolute; left: -1.5rem;
-    color: var(--accent); font-weight: 700; font-size: 0.8rem;
+    content: counter(step); position: absolute; left: -1.4rem;
+    color: var(--accent); font-weight: 700; font-size: 0.78rem;
   }
 
-  /* === DATA FLOW ANIMATION === */
-  .flow-particle {
-    r: 4; opacity: 0.8;
-    animation: pulse 1.5s ease-in-out infinite alternate;
+  /* === SEARCH === */
+  .search-bar {
+    display: flex; align-items: center; gap: 0.5rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.5rem 0.8rem; margin-bottom: 1.2rem;
   }
-  @keyframes pulse { from { r: 3; opacity: 0.6; } to { r: 5; opacity: 1; } }
+  .search-bar input {
+    flex: 1; background: none; border: none; color: var(--text);
+    font-size: 0.9rem; outline: none;
+  }
+  .search-bar input::placeholder { color: var(--text-dim); }
 
-  /* === STARRY NIGHT BACKGROUND (dark mode only) === */
+  /* === STARRY BG === */
   .starry-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 0; pointer-events: none; overflow: hidden;
@@ -251,65 +251,203 @@
   .starry-bg .star {
     position: absolute; width: 2px; height: 2px;
     background: #ffd43b; border-radius: 50%;
-    animation: twinkle var(--duration, 3s) ease-in-out infinite alternate;
+    animation: twinkle var(--dur, 3s) ease-in-out infinite alternate;
   }
-  .starry-bg .star.dim {
-    background: rgba(255, 255, 255, 0.5); width: 1px; height: 1px;
-  }
-  @keyframes twinkle {
-    from { opacity: 0.2; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1.2); }
-  }
-  .starry-bg .nebula {
-    position: absolute; border-radius: 50%;
-    filter: blur(80px); opacity: 0.15;
-  }
+  .starry-bg .star.dim { background: rgba(255,255,255,0.5); width: 1px; height: 1px; }
+  @keyframes twinkle { from { opacity: 0.2; transform: scale(0.8); } to { opacity: 1; transform: scale(1.2); } }
+  .starry-bg .nebula { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; }
   [data-theme="light"] .starry-bg { display: none; }
   [data-theme="light"] body { background-image: none; }
 
-  /* === LIGHT THEME OVERRIDES === */
-  [data-theme="light"] .node-rect { fill: var(--node-fill); }
-  [data-theme="light"] .arch-diagram { box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06); }
-  [data-theme="light"] .story-step:hover { box-shadow: 0 4px 20px rgba(0, 153, 204, 0.1); }
-  [data-theme="light"] .howto-card:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08); }
-  [data-theme="light"] .tooltip { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12); }
-
-  /* === SMOOTH THEME TRANSITION === */
-  body, nav, .story-step, .arch-diagram, .howto-card, .detail-panel,
-  .search-bar, .arch-legend, .tooltip {
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
-  }
-
-  /* === RESPONSIVE === */
-  @media (max-width: 768px) {
-    nav { padding: 0 1rem; }
-    nav .tabs button { padding: 0.4rem 0.6rem; font-size: 0.8rem; }
-    main { padding: 1rem; }
-    .hero h1 { font-size: 1.8rem; }
-    .detail-panel { width: 100%; right: -100%; }
-  }
-
   /* === TOOLTIP === */
   .tooltip {
-    position: fixed; background: var(--card); border: 1px solid var(--accent);
-    border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.85rem;
+    position: fixed; background: var(--nav-bg); border: 1px solid var(--accent);
+    border-radius: 8px; padding: 0.5rem 0.8rem; font-size: 0.82rem;
     pointer-events: none; z-index: 200; opacity: 0; transition: opacity 0.2s;
-    max-width: 250px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    max-width: 240px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    backdrop-filter: blur(12px);
   }
   .tooltip.visible { opacity: 1; }
 
-  /* === SEARCH === */
-  .search-bar {
-    display: flex; align-items: center; gap: 0.5rem;
+  /* === FOOTER === */
+  footer {
+    padding: 2rem; text-align: center; margin-top: 3rem;
+    border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.88rem;
+    position: relative; z-index: 1;
+  }
+  footer .brand { color: var(--accent); font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 600; border-bottom: 1px dashed var(--accent); }
+  footer a:hover { opacity: 0.8; }
+
+  /* === TRANSITIONS === */
+  body, nav, .story-step, .arch-diagram, .howto-card, .inline-detail,
+  .search-bar, .arch-legend, .tooltip, footer {
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+  }
+  [data-theme="light"] .arch-diagram { box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+
+  /* === QUALITY TAB === */
+  .quality-section { margin-bottom: 2rem; }
+  .quality-section h3 {
+    color: var(--accent); font-size: 1.1rem; margin-bottom: 1rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid var(--border);
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .stat-card {
     background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 0.6rem 1rem; margin-bottom: 1.5rem;
+    border-radius: 12px; padding: 1.2rem; text-align: center;
+    transition: all 0.3s;
   }
-  .search-bar input {
-    flex: 1; background: none; border: none; color: var(--text);
-    font-size: 0.95rem; outline: none;
+  .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(255,215,0,0.06); }
+  .stat-card .stat-value { font-size: 2rem; font-weight: 700; color: var(--accent); }
+  .stat-card .stat-label { color: var(--text-dim); font-size: 0.88rem; margin-top: 0.3rem; }
+  .security-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
   }
-  .search-bar input::placeholder { color: var(--text-dim); }
-  .highlight { background: rgba(0, 212, 255, 0.2); border-radius: 3px; padding: 0 2px; }
+  .security-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem; transition: all 0.3s;
+  }
+  .security-card:hover { border-color: var(--accent4); transform: translateY(-2px); }
+  .security-card .sec-icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .security-card h4 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .security-card p { color: var(--text-dim); font-size: 0.85rem; line-height: 1.6; }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .quality-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    background: var(--glow); color: var(--accent); border: 1px solid rgba(255,215,0,0.2);
+    padding: 0.35rem 0.8rem; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+  }
+
+  /* === FEATURES TAB === */
+  .features-section { margin-bottom: 2rem; }
+  .feature-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.2rem; margin-bottom: 1.5rem;
+  }
+  .feature-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.4rem; transition: all 0.3s;
+  }
+  .feature-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 4px 16px rgba(255,215,0,0.06); }
+  .feature-card .feature-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+  .feature-card h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+  .feature-card p { color: var(--text-dim); line-height: 1.6; font-size: 0.88rem; }
+
+  /* === DATABASE TAB === */
+  #schema-tables {
+    display: flex; gap: 12px; align-items: flex-start;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .db-table {
+    background: rgba(13,17,23,0.8); border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 12px; min-width: 140px; overflow: hidden;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem;
+    transition: all 0.2s;
+  }
+  .db-table:hover { border-color: rgba(255,215,0,0.4); box-shadow: 0 0 16px rgba(255,215,0,0.1); }
+  .db-table.view-table { border: 2px solid rgba(255,215,0,0.5); box-shadow: 0 0 20px rgba(255,215,0,0.1); }
+  .db-table-header {
+    padding: 8px 12px; background: rgba(16,185,129,0.12);
+    border-bottom: 1px solid rgba(16,185,129,0.2);
+    font-weight: 700; color: var(--accent4); font-size: 0.85rem;
+  }
+  .db-table.view-table .db-table-header { background: rgba(255,215,0,0.1); color: var(--accent); }
+  .db-table-row {
+    padding: 5px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-dim); display: flex; align-items: center; gap: 6px;
+    transition: all 0.3s;
+  }
+  .db-table-row:last-child { border-bottom: none; }
+  .db-table-row.pk { color: var(--accent2); }
+  .db-table-row.fk { color: #a5b4fc; }
+  .col-icon { font-size: 0.78rem; opacity: 0.7; }
+  .db-rls-banner {
+    padding: 12px 20px; background: rgba(79,70,229,0.15);
+    border: 1px solid rgba(79,70,229,0.3); border-radius: 12px;
+    font-size: 0.85rem; color: #a5b4fc; text-align: center; margin-top: 1rem;
+  }
+  #db-demo { display: flex; flex-direction: column; gap: 16px; margin-top: 1.5rem; }
+  #db-demo-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+  .db-demo-btn {
+    padding: 10px 22px; border-radius: 12px; font-size: 0.9rem;
+    font-weight: 600; cursor: pointer; border: none; transition: all 0.2s;
+  }
+  .db-demo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .db-demo-btn-insert {
+    background: linear-gradient(135deg, rgba(16,185,129,0.3), rgba(5,150,105,0.2));
+    border: 1px solid rgba(16,185,129,0.5); color: var(--accent4);
+  }
+  .db-demo-btn-approve {
+    background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(251,191,36,0.1));
+    border: 1px solid rgba(255,215,0,0.4); color: var(--accent);
+  }
+  .db-demo-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .db-demo-btn:active:not(:disabled) { transform: translateY(0); }
+  #db-live-table {
+    background: rgba(13,17,23,0.8); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; overflow: hidden;
+    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
+  }
+  #db-live-table-header {
+    display: grid; grid-template-columns: {{DB_LIVE_GRID_COLS}};
+    padding: 8px 12px; background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-dim); font-weight: 700; font-size: 0.82rem;
+  }
+  .db-live-row {
+    display: grid; grid-template-columns: {{DB_LIVE_GRID_COLS}};
+    padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text-dim); transition: all 0.3s;
+  }
+  .db-live-row:last-child { border-bottom: none; }
+  .db-live-row .id-col { color: #a5b4fc; }
+  .db-live-row .desc-col { color: var(--text); }
+  .db-live-row .stars-col { color: var(--accent); }
+  .badge-pending {
+    background: rgba(251,191,36,0.15); color: #FBBF24;
+    padding: 2px 8px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+  }
+  .badge-approved {
+    background: rgba(16,185,129,0.15); color: var(--accent4);
+    padding: 2px 8px; border-radius: 8px; font-size: 0.78rem; font-weight: 600;
+  }
+  #db-balance-display {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 20px; background: rgba(255,215,0,0.08);
+    border: 1px solid rgba(255,215,0,0.2); border-radius: 12px;
+  }
+  #db-balance-label { color: var(--text-dim); font-size: 0.85rem; }
+  #db-balance-value { font-size: 1.6rem; font-weight: 900; color: var(--accent); font-family: monospace; }
+  @keyframes rowInsert { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes goldFlash { 0% { background: transparent; } 50% { background: rgba(255,215,0,0.3); } 100% { background: transparent; } }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    nav { padding: 0 0.8rem; }
+    nav .tabs button { padding: 0.35rem 0.5rem; font-size: 0.78rem; }
+    nav .logo { font-size: 1rem; }
+    main { padding: 1rem; }
+    .hero h1 { font-size: 1.7rem; }
+    .howto-grid { grid-template-columns: 1fr; }
+    .security-grid { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    #schema-tables { overflow-x: auto; }
+  }
+  @media (max-width: 480px) {
+    nav .logo { display: none; }
+    nav .tabs button { padding: 0.3rem 0.4rem; font-size: 0.72rem; }
+    .hero h1 { font-size: 1.3rem; }
+    .hero .subtitle { font-size: 0.95rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .badge-row { gap: 0.4rem; }
+    .quality-badge { font-size: 0.72rem; padding: 0.25rem 0.6rem; }
+  }
 </style>
 </head>
 <body>
@@ -320,10 +458,10 @@
   <div class="logo">{{PROJECT_NAME}}</div>
   <div class="tabs">
     <button class="active" data-tab="story" onclick="switchTab('story')">
-      <span data-en="Story Mode" data-zh="故事模式">Story Mode</span>
+      <span data-en="Story" data-zh="故事">Story</span>
     </button>
     <button data-tab="architecture" onclick="switchTab('architecture')">
-      <span data-en="Architecture" data-zh="技术架构">Architecture</span>
+      <span data-en="Architecture" data-zh="架构">Architecture</span>
     </button>
     <button data-tab="howto" onclick="switchTab('howto')">
       <span data-en="How to Use" data-zh="使用指南">How to Use</span>
@@ -331,177 +469,247 @@
     <button data-tab="dataflow" onclick="switchTab('dataflow')">
       <span data-en="Data Flow" data-zh="数据流">Data Flow</span>
     </button>
+    <button data-tab="quality" onclick="switchTab('quality')">
+      <span data-en="Quality" data-zh="质量">Quality</span>
+    </button>
+    <button data-tab="features" onclick="switchTab('features')" {{FEATURES_TAB_DISPLAY}}>
+      <span data-en="{{FEATURES_TAB_EN}}" data-zh="{{FEATURES_TAB_ZH}}">{{FEATURES_TAB_EN}}</span>
+    </button>
+    <button data-tab="database" onclick="switchTab('database')" {{DB_TAB_DISPLAY}}>
+      <span data-en="Database" data-zh="数据库">Database</span>
+    </button>
   </div>
   <div class="nav-controls">
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
-    <button class="lang-toggle" onclick="toggleLang()">EN / 中文</button>
+    <button class="ctrl-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">🌙</button>
+    <button class="ctrl-btn" onclick="toggleLang()">EN / 中文</button>
   </div>
 </nav>
 
 <main>
-  <!-- TAB 1: Story Mode -->
-  <section id="tab-story" class="active">
-    <div class="hero">
-      <div class="mascot">{{MASCOT_EMOJI}}</div>
-      <h1><span data-en="{{STORY_TITLE_EN}}" data-zh="{{STORY_TITLE_ZH}}">{{STORY_TITLE_EN}}</span></h1>
-      <p class="subtitle"><span data-en="{{STORY_INTRO_EN}}" data-zh="{{STORY_INTRO_ZH}}">{{STORY_INTRO_EN}}</span></p>
-    </div>
-    <div class="story-timeline" id="story-timeline">
-      <!-- {{STORY_STEPS}} -->
-    </div>
-  </section>
+<!-- ========== TAB 1: STORY MODE ========== -->
+<section id="tab-story" class="active">
+  <div class="hero">
+    <div class="mascot">{{MASCOT_EMOJI}}</div>
+    <h1><span data-en="{{STORY_TITLE_EN}}" data-zh="{{STORY_TITLE_ZH}}">{{STORY_TITLE_EN}}</span></h1>
+    <p class="subtitle"><span data-en="{{STORY_INTRO_EN}}" data-zh="{{STORY_INTRO_ZH}}">{{STORY_INTRO_EN}}</span></p>
+  </div>
+  <div class="story-timeline" id="story-timeline">
+    <!-- {{STORY_STEPS}} -->
+  </div>
+</section>
 
-  <!-- TAB 2: Architecture -->
-  <section id="tab-architecture">
-    <h2 style="margin-bottom:1.5rem">
-      <span data-en="System Architecture" data-zh="系统架构">System Architecture</span>
-    </h2>
-    <div class="search-bar">
-      <span>🔍</span>
-      <input type="text" id="arch-search" placeholder="Search components..."
-             data-en-placeholder="Search components..."
-             data-zh-placeholder="搜索组件..."
-             oninput="filterComponents(this.value)">
+<!-- ========== TAB 2: ARCHITECTURE ========== -->
+<section id="tab-architecture">
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="System Architecture" data-zh="系统架构">System Architecture</span>
+  </h2>
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="arch-search" placeholder="Search components..."
+           data-en-placeholder="Search components..."
+           data-zh-placeholder="搜索组件..."
+           oninput="filterComponents(this.value)">
+  </div>
+  <div class="arch-container">
+    <div class="arch-diagram" id="arch-svg-container">
+      <!-- {{ARCHITECTURE_SVG}} -->
     </div>
-    <div class="arch-container">
-      <div class="arch-diagram" id="arch-svg-container">
-        <!-- {{ARCHITECTURE_SVG}} -->
-      </div>
-      <div class="arch-legend" id="arch-legend">
-        <!-- {{ARCHITECTURE_LEGEND}} -->
-      </div>
+    <div class="inline-detail" id="inline-detail">
+      <button class="close-btn" onclick="closePanel()">&times;</button>
+      <h2 id="panel-title"></h2>
+      <div id="panel-tags"></div>
+      <div class="desc" id="panel-desc"></div>
+      <div class="connections" id="panel-connections"></div>
     </div>
-  </section>
+    <div class="arch-legend" id="arch-legend">
+      <!-- {{ARCHITECTURE_LEGEND}} -->
+    </div>
+  </div>
+</section>
 
-  <!-- TAB 3: How to Use -->
-  <section id="tab-howto">
-    <h2 style="margin-bottom:1.5rem">
-      <span data-en="How to Use This Project" data-zh="如何使用这个项目">How to Use This Project</span>
-    </h2>
-    <div class="howto-grid" id="howto-grid">
-      <!-- {{HOWTO_CARDS}} -->
-    </div>
-  </section>
+<!-- ========== TAB 3: HOW TO USE ========== -->
+<section id="tab-howto">
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="How to Use This Project" data-zh="如何使用这个项目">How to Use This Project</span>
+  </h2>
+  <div class="howto-grid" id="howto-grid">
+    <!-- {{HOWTO_CARDS}} -->
+  </div>
+</section>
 
-  <!-- TAB 4: Data Flow -->
-  <section id="tab-dataflow">
-    <h2 style="margin-bottom:1.5rem">
-      <span data-en="How Data Flows Through the System" data-zh="数据如何在系统中流动">How Data Flows Through the System</span>
-    </h2>
-    <div class="arch-diagram" id="dataflow-svg-container">
-      <!-- {{DATAFLOW_SVG}} -->
+<!-- ========== TAB 4: DATA FLOW ========== -->
+<section id="tab-dataflow">
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="How Data Flows Through the System" data-zh="数据如何在系统中流动">How Data Flows Through the System</span>
+  </h2>
+  <div class="arch-diagram" id="dataflow-svg-container">
+    <!-- {{DATAFLOW_SVG}} -->
+  </div>
+</section>
+
+<!-- ========== TAB 5: QUALITY & SECURITY ========== -->
+<section id="tab-quality">
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="Quality &amp; Security" data-zh="质量与安全">Quality &amp; Security</span>
+  </h2>
+  <div class="quality-section">
+    <h3><span data-en="Test Coverage" data-zh="测试覆盖">Test Coverage</span></h3>
+    <div class="stat-grid">
+      <!-- {{QUALITY_STATS}} -->
     </div>
-  </section>
+  </div>
+  <div class="quality-section">
+    <h3><span data-en="Security Features" data-zh="安全特性">Security Features</span></h3>
+    <div class="security-grid">
+      <!-- {{SECURITY_CARDS}} -->
+    </div>
+  </div>
+  <div class="quality-section">
+    <h3><span data-en="Code Quality" data-zh="代码质量">Code Quality</span></h3>
+    <div class="badge-row">
+      <!-- {{QUALITY_BADGES}} -->
+    </div>
+  </div>
+</section>
+
+<!-- ========== TAB 6: KEY FEATURES ========== -->
+<section id="tab-features" {{FEATURES_SECTION_DISPLAY}}>
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="{{FEATURES_TITLE_EN}}" data-zh="{{FEATURES_TITLE_ZH}}">{{FEATURES_TITLE_EN}}</span>
+  </h2>
+  <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.95rem">
+    <span data-en="{{FEATURES_INTRO_EN}}" data-zh="{{FEATURES_INTRO_ZH}}">{{FEATURES_INTRO_EN}}</span>
+  </p>
+  {{FEATURES_CONTENT}}
+</section>
+
+<!-- ========== TAB 7: DATABASE ========== -->
+<section id="tab-database" {{DB_SECTION_DISPLAY}}>
+  <h2 style="margin-bottom:1.2rem;color:var(--accent);font-size:1.5rem">
+    <span data-en="Database Schema" data-zh="数据库架构">Database Schema</span> 🗄️
+  </h2>
+  <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.95rem">
+    <span data-en="Everything is saved in a database. Tables hold the data, and arrows show how they connect!" data-zh="一切都保存在数据库中。表格存储数据，箭头显示它们如何连接！">Everything is saved in a database. Tables hold the data, and arrows show how they connect!</span>
+  </p>
+  <div id="schema-tables"><!-- Filled by JS --></div>
+  {{DB_RLS_BANNER}}
+  {{DB_DEMO_HTML}}
+</section>
 </main>
 
-<!-- Detail Panel (slide-in) -->
-<div class="detail-panel" id="detail-panel">
-  <button class="close-btn" onclick="closePanel()">&times;</button>
-  <h2 id="panel-title"></h2>
-  <div id="panel-tags"></div>
-  <div class="desc" id="panel-desc"></div>
-  <div class="connections" id="panel-connections"></div>
-</div>
-
-<!-- Tooltip -->
 <div class="tooltip" id="tooltip"></div>
 
+<!-- Footer -->
+<footer>
+  <div class="brand">{{MASCOT_EMOJI}} {{PROJECT_NAME}}</div>
+  <div><span data-en="{{FOOTER_TAGLINE_EN}}" data-zh="{{FOOTER_TAGLINE_ZH}}">{{FOOTER_TAGLINE_EN}}</span></div>
+  <div style="margin-top:8px">
+    <a id="try-cta" href="{{FOOTER_CTA_URL}}" target="_blank"><span data-en="Try it now!" data-zh="现在就试试吧">Try it now!</span></a>
+  </div>
+</footer>
+
 <script>
-// === LANGUAGE TOGGLE ===
-let currentLang = 'en';
+var currentLang = 'en';
 function toggleLang() {
   currentLang = currentLang === 'en' ? 'zh' : 'en';
-  document.querySelectorAll('[data-en]').forEach(el => {
-    el.textContent = el.getAttribute(`data-${currentLang}`);
+  document.querySelectorAll('[data-en]').forEach(function(el) {
+    el.textContent = el.getAttribute('data-' + currentLang);
   });
-  document.querySelectorAll('[data-en-placeholder]').forEach(el => {
-    el.placeholder = el.getAttribute(`data-${currentLang}-placeholder`);
+  document.querySelectorAll('[data-en-placeholder]').forEach(function(el) {
+    el.placeholder = el.getAttribute('data-' + currentLang + '-placeholder');
   });
 }
 
-// === THEME TOGGLE ===
 function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
+  var html = document.documentElement;
+  var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', next);
   document.getElementById('theme-btn').textContent = next === 'dark' ? '🌙' : '☀️';
 }
-// === STARRY NIGHT BACKGROUND ===
+
 function createStars() {
-  const container = document.getElementById('starry-bg');
-  if (!container) return;
-  // Remove existing children safely
-  while (container.firstChild) { container.removeChild(container.firstChild); }
-  // Create twinkling stars
-  for (let i = 0; i < 60; i++) {
-    const star = document.createElement('div');
-    star.className = Math.random() > 0.3 ? 'star dim' : 'star';
-    star.style.left = Math.random() * 100 + '%';
-    star.style.top = Math.random() * 100 + '%';
-    star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
-    star.style.animationDelay = Math.random() * 3 + 's';
-    container.appendChild(star);
+  var c = document.getElementById('starry-bg');
+  if (!c) return;
+  while (c.firstChild) c.removeChild(c.firstChild);
+  for (var i = 0; i < 55; i++) {
+    var s = document.createElement('div');
+    s.className = Math.random() > 0.3 ? 'star dim' : 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.setProperty('--dur', (2 + Math.random() * 4) + 's');
+    s.style.animationDelay = Math.random() * 3 + 's';
+    c.appendChild(s);
   }
-  // Create nebula glow spots
-  var nebulae = [
-    { x: '20%', y: '15%', size: '300px', color: '#5a4a9a' },
-    { x: '70%', y: '60%', size: '400px', color: '#4a3a8a' },
-    { x: '50%', y: '85%', size: '250px', color: '#5a5aa0' }
-  ];
-  nebulae.forEach(function(n) {
+  [{x:'20%',y:'15%',sz:'300px',col:'#5a4a9a'},{x:'70%',y:'60%',sz:'350px',col:'#4a3a8a'},{x:'50%',y:'85%',sz:'250px',col:'#5a5aa0'}].forEach(function(n) {
     var el = document.createElement('div');
     el.className = 'nebula';
-    el.style.left = n.x; el.style.top = n.y;
-    el.style.width = n.size; el.style.height = n.size;
-    el.style.background = n.color;
-    container.appendChild(el);
+    el.style.cssText = 'left:'+n.x+';top:'+n.y+';width:'+n.sz+';height:'+n.sz+';background:'+n.col;
+    c.appendChild(el);
   });
 }
 
-// Set initial icon based on default theme
-document.addEventListener('DOMContentLoaded', () => {
-  const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-  document.getElementById('theme-btn').textContent = theme === 'dark' ? '🌙' : '☀️';
-  createStars();
-});
-
-// === TAB SWITCHING ===
 function switchTab(tab) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav .tabs button').forEach(b => b.classList.remove('active'));
-  document.getElementById(`tab-${tab}`).classList.add('active');
-  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('nav .tabs button').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
   closePanel();
 }
 
-// === STORY STEP EXPAND ===
-document.addEventListener('click', e => {
-  const step = e.target.closest('.story-step');
+document.addEventListener('click', function(e) {
+  var step = e.target.closest('.story-step');
   if (step) step.classList.toggle('expanded');
 });
 
-// === DETAIL PANEL ===
-function openPanel(data) {
-  const panel = document.getElementById('detail-panel');
-  document.getElementById('panel-title').textContent = data.name;
-  document.getElementById('panel-tags').innerHTML = (data.tags || [])
-    .map(t => `<span class="tag">${t}</span>`).join('');
-  document.getElementById('panel-desc').innerHTML =
-    `<p>${currentLang === 'zh' ? (data.desc_zh || data.desc) : data.desc}</p>`;
-  const connHtml = (data.connections || []).map(c =>
-    `<div class="conn-item"><span class="conn-arrow">${c.direction === 'out' ? '→' : '←'}</span> ${c.target}: ${currentLang === 'zh' ? (c.label_zh || c.label) : c.label}</div>`
-  ).join('');
-  document.getElementById('panel-connections').innerHTML =
-    connHtml ? `<h4>${currentLang === 'zh' ? '关联' : 'Connections'}</h4>${connHtml}` : '';
+// === COMPONENT DATA (populated by Claude) ===
+var COMPONENTS = {{COMPONENTS_JSON}};
+
+// === INLINE DETAIL PANEL ===
+var currentNodeId = null;
+function openPanel(data, nodeId) {
+  var panel = document.getElementById('inline-detail');
+  if (currentNodeId === nodeId) {
+    closePanel();
+    return;
+  }
+  currentNodeId = nodeId;
+  document.getElementById('panel-title').textContent = currentLang === 'zh' ? (data.name_zh || data.name) : data.name;
+  var tagsEl = document.getElementById('panel-tags');
+  tagsEl.textContent = '';
+  (data.tags || []).forEach(function(t) {
+    var span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = t;
+    tagsEl.appendChild(span);
+  });
+  var descEl = document.getElementById('panel-desc');
+  descEl.textContent = currentLang === 'zh' ? (data.desc_zh || data.desc) : data.desc;
+  var connEl = document.getElementById('panel-connections');
+  connEl.textContent = '';
+  if (data.connections && data.connections.length) {
+    var h4 = document.createElement('h4');
+    h4.textContent = currentLang === 'zh' ? '关联' : 'Connections';
+    connEl.appendChild(h4);
+    data.connections.forEach(function(c) {
+      var div = document.createElement('div');
+      div.className = 'conn-item';
+      div.textContent = (c.direction === 'out' ? '→ ' : '← ') + c.target + ': ' + (currentLang === 'zh' ? (c.label_zh || c.label) : c.label);
+      connEl.appendChild(div);
+    });
+  }
+  panel.classList.remove('open');
+  void panel.offsetWidth;
   panel.classList.add('open');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 function closePanel() {
-  document.getElementById('detail-panel').classList.remove('open');
+  var panel = document.getElementById('inline-detail');
+  panel.classList.remove('open');
+  currentNodeId = null;
 }
 
 // === TOOLTIP ===
-const tooltip = document.getElementById('tooltip');
+var tooltip = document.getElementById('tooltip');
 function showTooltip(e, text) {
   tooltip.textContent = text;
   tooltip.style.left = e.clientX + 10 + 'px';
@@ -510,44 +718,114 @@ function showTooltip(e, text) {
 }
 function hideTooltip() { tooltip.classList.remove('visible'); }
 
-// === SEARCH / FILTER ===
+// === SEARCH ===
 function filterComponents(query) {
-  const q = query.toLowerCase();
-  document.querySelectorAll('.node-group').forEach(node => {
-    const name = (node.getAttribute('data-name') || '').toLowerCase();
+  var q = query.toLowerCase();
+  document.querySelectorAll('.node-group').forEach(function(node) {
+    var name = (node.getAttribute('data-name') || '').toLowerCase();
     node.style.opacity = !q || name.includes(q) ? '1' : '0.2';
   });
 }
 
-// === COMPONENT DATA (populated by Claude) ===
-const COMPONENTS = {{COMPONENTS_JSON}};
+// === ANIMATE COUNTER ===
+function animateCounter(el, from, to, duration) {
+  var start = performance.now();
+  function tick(now) {
+    var elapsed = now - start;
+    var progress = Math.min(elapsed / duration, 1);
+    var eased = 1 - Math.pow(1 - progress, 3);
+    var value = Math.round(from + (to - from) * eased);
+    el.textContent = value;
+    if (progress < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+// === DATABASE SCHEMA RENDERER ===
+{{DB_TABLES_JSON}}
+
+function renderSchema() {
+  var container = document.getElementById('schema-tables');
+  if (!container || typeof DB_TABLES === 'undefined') return;
+  container.textContent = '';
+  DB_TABLES.forEach(function(table) {
+    var box = document.createElement('div');
+    box.className = 'db-table' + (table.isView ? ' view-table' : '');
+    var header = document.createElement('div');
+    header.className = 'db-table-header';
+    if (table.isView) {
+      var viewLabel = currentLang === 'zh' ? '视图' : 'VIEW';
+      header.textContent = '👁️ ' + table.name + ' ';
+      var viewSpan = document.createElement('span');
+      viewSpan.style.cssText = 'font-size:0.6rem;opacity:0.7';
+      viewSpan.textContent = viewLabel;
+      header.appendChild(viewSpan);
+    } else {
+      header.textContent = table.name;
+    }
+    box.appendChild(header);
+    table.cols.forEach(function(col) {
+      var row = document.createElement('div');
+      row.className = 'db-table-row ' + col.type;
+      var iconSpan = document.createElement('span');
+      iconSpan.className = 'col-icon';
+      iconSpan.textContent = col.type === 'pk' ? '🔑' : col.type === 'fk' ? '🔗' : '·';
+      row.appendChild(iconSpan);
+      row.appendChild(document.createTextNode(col.label));
+      box.appendChild(row);
+    });
+    container.appendChild(box);
+    if (table.isView) {
+      var note = document.createElement('div');
+      note.style.cssText = 'font-size:0.82rem;color:var(--accent);text-align:center;margin-top:4px';
+      note.textContent = currentLang === 'zh' ? '✨ 自动计算！' : '✨ Computed!';
+      note.setAttribute('data-en', '✨ Computed!');
+      note.setAttribute('data-zh', '✨ 自动计算！');
+      container.appendChild(note);
+    }
+  });
+}
+
+// === DATABASE DEMO (populated by Claude) ===
+{{DB_DEMO_JS}}
+
+// === FEATURES JS (populated by Claude) ===
+{{FEATURES_JS}}
+
+// === AUTO-LOCALE CTA ===
+(function() {
+  var zh = /^zh/i.test(navigator.language);
+  var a = document.getElementById('try-cta');
+  if (a && a.href) {
+    var url = a.href.replace(/\/(en|zh(-CN)?)(\/?$)/, '/' + (zh ? 'zh-CN' : 'en') + '/');
+    a.href = url;
+  }
+})();
 
 // === INIT ===
-document.addEventListener('DOMContentLoaded', () => {
-  // Bind click events to architecture SVG nodes
-  document.querySelectorAll('.node-group').forEach(node => {
-    const id = node.getAttribute('data-id');
+document.addEventListener('DOMContentLoaded', function() {
+  createStars();
+  renderSchema();
+  document.querySelectorAll('.node-group').forEach(function(node) {
+    var id = node.getAttribute('data-id');
     if (id && COMPONENTS[id]) {
-      node.addEventListener('click', () => openPanel(COMPONENTS[id]));
-      node.addEventListener('mouseenter', e => showTooltip(e,
-        currentLang === 'zh'
-          ? (COMPONENTS[id].tooltip_zh || COMPONENTS[id].tooltip || COMPONENTS[id].name)
-          : (COMPONENTS[id].tooltip || COMPONENTS[id].name)
-      ));
+      node.addEventListener('click', function() { openPanel(COMPONENTS[id], id); });
+      node.addEventListener('mouseenter', function(e) {
+        showTooltip(e, currentLang === 'zh' ? (COMPONENTS[id].tooltip_zh || COMPONENTS[id].name) : (COMPONENTS[id].tooltip || COMPONENTS[id].name));
+      });
       node.addEventListener('mouseleave', hideTooltip);
     }
   });
-
-  // Animate flow particles
-  document.querySelectorAll('.flow-path').forEach(path => {
-    const particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  document.querySelectorAll('.flow-path').forEach(function(path) {
+    var particle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     particle.classList.add('flow-particle');
-    particle.setAttribute('fill', path.getAttribute('stroke') || '#00d4ff');
-    const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
-    anim.setAttribute('dur', `${2 + Math.random() * 2}s`);
+    particle.setAttribute('r', '3');
+    particle.setAttribute('fill', path.getAttribute('stroke') || '#FFD700');
+    var anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+    anim.setAttribute('dur', (2 + Math.random() * 2) + 's');
     anim.setAttribute('repeatCount', 'indefinite');
-    const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
-    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', `#${path.id}`);
+    var mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
+    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'href', '#' + path.id);
     anim.appendChild(mpath);
     particle.appendChild(anim);
     path.parentNode.appendChild(particle);

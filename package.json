@@ -1,0 +1,35 @@
+{
+  "name": "codebase-visualizer",
+  "version": "2.0.0",
+  "description": "A Claude Code skill that transforms any codebase into an interactive visual HTML guide with up to 7 tabs: story mode, architecture diagram, how-to guide, data flow, quality metrics, key features, and database schema. Bilingual CN/EN support.",
+  "keywords": [
+    "claude-code",
+    "claude-code-skill",
+    "codebase",
+    "visualizer",
+    "architecture",
+    "diagram",
+    "interactive",
+    "documentation",
+    "bilingual"
+  ],
+  "author": {
+    "name": "Amanda",
+    "email": "flyrhyme@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/belugatempo-dot/codebase-visualizer.git"
+  },
+  "homepage": "https://github.com/belugatempo-dot/codebase-visualizer",
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "assets/",
+    "references/",
+    "examples/",
+    "skills/",
+    ".claude-plugin/"
+  ]
+}
