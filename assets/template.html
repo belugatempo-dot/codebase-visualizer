@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{PROJECT_NAME}} - Interactive Codebase Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* === DARK THEME (starry night) === */
   :root, [data-theme="dark"] {
@@ -49,7 +51,7 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: Inter, 'Noto Sans SC', 'Segoe UI', system-ui, -apple-system, sans-serif;
     background: var(--bg);
     background-image: var(--bg-gradient);
     background-attachment: fixed;
@@ -346,7 +348,7 @@
   .db-table {
     background: rgba(13,17,23,0.8); border: 1px solid rgba(16,185,129,0.25);
     border-radius: 12px; min-width: 140px; overflow: hidden;
-    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.82rem;
     transition: all 0.2s;
   }
   .db-table:hover { border-color: rgba(255,215,0,0.4); box-shadow: 0 0 16px rgba(255,215,0,0.1); }
@@ -391,7 +393,7 @@
   #db-live-table {
     background: rgba(13,17,23,0.8); border: 1px solid rgba(255,255,255,0.1);
     border-radius: 12px; overflow: hidden;
-    font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
+    font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem;
   }
   #db-live-table-header {
     display: grid; grid-template-columns: {{DB_LIVE_GRID_COLS}};
